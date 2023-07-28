@@ -1,5 +1,5 @@
 <script>
-  import Form from "./entry/form.svelte";
+  import Form from "./entry/EntryForm.svelte";
 </script>
 
 <div class="container-h">

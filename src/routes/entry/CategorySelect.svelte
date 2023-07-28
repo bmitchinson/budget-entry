@@ -3,6 +3,11 @@
 
   export let selectedCategory: String;
 
+  export const clear = () => {
+    const input = <HTMLInputElement>document.getElementById("category-select");
+    input.value = "";
+  };
+
   const categoryChoices = ["Gas", "Grocery", "Date Night"];
 </script>
 
@@ -14,10 +19,9 @@
 <AutoComplete
   items={categoryChoices}
   bind:selectedItem={selectedCategory}
+  inputId="category-select"
   noInputStyles={true}
   hideArrow
-  createText="No Match"
-  inputId="category-select"
   required
 />
 

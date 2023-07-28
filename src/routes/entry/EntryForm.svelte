@@ -2,14 +2,16 @@
   import { createForm } from "svelte-forms-lib";
   import { onMount } from "svelte";
   import { App } from "@capacitor/app";
-  import Autocomplete from "./autocomplete.svelte";
+  import Autocomplete from "./CategorySelect.svelte";
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const day = String(today.getDate()).padStart(2, "0");
   const selectedDate = `${today.getFullYear()}-${month}-${day}`;
 
-  const { form, handleChange, handleSubmit } = createForm({
+  let clearCategoryField: () => void;
+
+  const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
       price: "",
       category: "",
@@ -18,6 +20,8 @@
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values));
+      handleReset();
+      clearCategoryField();
     },
   });
 
@@ -55,7 +59,10 @@
     </div>
 
     <div class="row-item space-between">
-      <Autocomplete bind:selectedCategory={$form.category} />
+      <Autocomplete
+        bind:selectedCategory={$form.category}
+        bind:clear={clearCategoryField}
+      />
     </div>
 
     <div class="row-item space-between">
