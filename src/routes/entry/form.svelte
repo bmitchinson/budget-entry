@@ -4,12 +4,17 @@
   import { App } from "@capacitor/app";
   import Autocomplete from "./autocomplete.svelte";
 
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  const selectedDate = `${today.getFullYear()}-${month}-${day}`;
+
   const { form, handleChange, handleSubmit } = createForm({
     initialValues: {
       price: "",
       category: "",
       description: "",
-      // datetime: new Date(),
+      date: selectedDate,
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values));
@@ -51,6 +56,17 @@
 
     <div class="row-item space-between">
       <Autocomplete bind:selectedCategory={$form.category} />
+    </div>
+
+    <div class="row-item space-between">
+      <label for="date">Date</label>
+      <input
+        id="date"
+        name="date"
+        type="date"
+        on:change={handleChange}
+        bind:value={$form.date}
+      />
     </div>
 
     <div class="row-item center">
