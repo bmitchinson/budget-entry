@@ -86,13 +86,6 @@
   .entry-form {
     font-size: 1.3rem;
   }
-  .row-item {
-    display: flex;
-    margin-bottom: 1em;
-    label {
-      margin-right: 1em;
-    }
-  }
   button {
     padding: 1em 2em;
     -webkit-appearance: none;

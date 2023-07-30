@@ -1,13 +1,13 @@
 <script lang="ts">
   import Form from "../components/entry/EntryForm.svelte";
-  // import PastPurchases from "../components/purchases/PastPurchases.svelte";
+  import PastPurchases from "../components/purchases/PastPurchases.svelte";
 </script>
 
 <div class="container-h">
   <div class="container-v">
     <h1>Budget Entry</h1>
     <Form />
-    <!-- <PastPurchases /> -->
+    <PastPurchases />
   </div>
 </div>
 
@@ -28,5 +28,12 @@
   }
   :global(.space-between) {
     justify-content: space-between;
+  }
+  :global(.row-item) {
+    display: flex;
+    margin-bottom: 1em;
+    label {
+      margin-right: 1em;
+    }
   }
 </style>
