@@ -3,14 +3,13 @@
   import {
     getFirestore,
     collection,
-    getDocs,
-    Firestore,
-    deleteDoc,
-    DocumentReference,
     onSnapshot,
     addDoc,
+    query,
+    deleteDoc,
   } from "firebase/firestore";
   import { firebaseConfig } from "../../lib/config";
+  import { onDestroy } from "svelte";
 
   // https://firebase.google.com/docs/web/pwa#access_your_app_data_offline
   //   firebase.firestore().enablePersistence().then(() => {
@@ -25,29 +24,22 @@
 
   let purchaseList = undefined; // todo: type this
   let purchaseListError = undefined; // todo: type this
-  getDocs(purchasesCol)
-    .then((querySnapshot) => {
-      purchaseList = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        ref: doc.ref,
-      }));
-    })
-    .catch((error) => {
-      purchaseListError = error;
-      console.log("Error getting purchase list", purchaseListError);
-    });
 
-  // This does an initial run and will replace the get
-  // const unsubPurchasesSnapshot = onSnapshot()
+  // could modify this query to be X recent, to avoid querying entire collection
+  const unsubPurchasesSnapshot = onSnapshot(query(purchasesCol), (snapshot) => {
+    purchaseList = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      ref: doc.ref,
+    }));
+  });
 
-  // async function deletePurchase(docRef: DocumentReference) {
-  //   console.log("deleting:" + docRef.id);
-  //   return deleteDoc(docRef).then(() => {
-  //     console.log("deleted:" + docRef.id);
-  //     // todo: how to update the purchaseList?
-  //     // purchaseList. // delete from purchaseList
-  //   });
-  // }
+  onDestroy(() => {
+    unsubPurchasesSnapshot();
+  });
+
+  async function deletePurchase(docRef: DocumentReference) {
+    deleteDoc(docRef);
+  }
 
   async function addPurchase() {
     addDoc(purchasesCol, {
@@ -65,7 +57,7 @@
         <li>
           <p>{purchase.ref.id} - {purchase.description}</p>
         </li>
-        <!-- <button on:click={() => deletePurchase(purchase.ref)}>delete</button> -->
+        <button on:click={() => deletePurchase(purchase.ref)}>delete</button>
       {/each}
     </ul>
     <div class="row-item center">
