@@ -1,0 +1,13 @@
+.center {
+  justify-content: center;
+}
+.space-between {
+  justify-content: space-between;
+}
+.row-item {
+  display: flex;
+  margin-bottom: 1em;
+  label {
+    margin-right: 1em;
+  }
+}

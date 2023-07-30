@@ -1,6 +1,8 @@
 <script lang="ts">
   import Form from "../components/entry/EntryForm.svelte";
   import PastPurchases from "../components/purchases/PastPurchases.svelte";
+
+  import "../global.scss";
 </script>
 
 <div class="container-h">
@@ -22,18 +24,5 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  :global(.center) {
-    justify-content: center;
-  }
-  :global(.space-between) {
-    justify-content: space-between;
-  }
-  :global(.row-item) {
-    display: flex;
-    margin-bottom: 1em;
-    label {
-      margin-right: 1em;
-    }
   }
 </style>
