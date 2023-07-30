@@ -1,11 +1,13 @@
-<script>
-  import Form from "./entry/EntryForm.svelte";
+<script lang="ts">
+  import Form from "../components/entry/EntryForm.svelte";
+  // import PastPurchases from "../components/purchases/PastPurchases.svelte";
 </script>
 
 <div class="container-h">
   <div class="container-v">
     <h1>Budget Entry</h1>
     <Form />
+    <!-- <PastPurchases /> -->
   </div>
 </div>
 
