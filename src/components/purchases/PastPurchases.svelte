@@ -7,19 +7,20 @@
     addDoc,
     query,
     deleteDoc,
+    initializeFirestore,
+    persistentLocalCache,
+    persistentMultipleTabManager,
   } from "firebase/firestore";
   import { firebaseConfig } from "../../lib/config";
   import { onDestroy } from "svelte";
 
-  // https://firebase.google.com/docs/web/pwa#access_your_app_data_offline
-  //   firebase.firestore().enablePersistence().then(() => {
-  //   const firestore = app.firestore();
-  //   // Use Cloud Firestore ...
-  // });
-
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentMultipleTabManager(),
+    }),
+  });
   const purchasesCol = collection(db, "purchases");
 
   let purchaseList = undefined; // todo: type this
