@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import { App } from "@capacitor/app";
   import Autocomplete from "./CategorySelect.svelte";
+  import { Database } from "../../lib/Database";
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -13,10 +14,10 @@
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
-      price: "",
+      amount: 0,
       category: "",
-      description: "",
       date: selectedDate,
+      description: "",
     },
     onSubmit: (values) => {
       alert(JSON.stringify(values));
@@ -26,9 +27,9 @@
   });
 
   onMount(() => {
-    document.getElementById("price")?.focus();
+    document.getElementById("amount")?.focus();
     App.addListener("appStateChange", ({ isActive }) => {
-      isActive && document.getElementById("price")?.focus();
+      isActive && document.getElementById("amount")?.focus();
     });
   });
 </script>
@@ -36,15 +37,15 @@
 <div class="entry-form">
   <form on:submit={handleSubmit}>
     <div class="row-item space-between">
-      <label for="price">Price</label>
+      <label for="amount">amount</label>
       <input
-        id="price"
-        name="price"
+        id="amount"
+        name="amount"
         type="number"
         step=".01"
         inputmode="decimal"
         on:change={handleChange}
-        bind:value={$form.price}
+        bind:value={$form.amount}
       />
     </div>
 
@@ -77,7 +78,10 @@
     </div>
 
     <div class="row-item center">
-      <button type="submit">Submit</button>
+      <button
+        on:click|preventDefault={() => Database.get().addPurchase($form)}
+        type="submit">Submit</button
+      >
     </div>
   </form>
 </div>
