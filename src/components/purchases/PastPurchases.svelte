@@ -1,7 +1,6 @@
 <script lang="ts">
   import { initializeApp } from "firebase/app";
   import {
-    getFirestore,
     collection,
     onSnapshot,
     addDoc,
@@ -10,9 +9,12 @@
     initializeFirestore,
     persistentLocalCache,
     persistentMultipleTabManager,
+    DocumentReference,
+    FirestoreError,
   } from "firebase/firestore";
   import { firebaseConfig } from "../../lib/config";
   import { onDestroy } from "svelte";
+  import type { PurchaseWRef, Purchase } from "../../lib/DatabaseTypes";
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -23,16 +25,22 @@
   });
   const purchasesCol = collection(db, "purchases");
 
-  let purchaseList = undefined; // todo: type this
-  let purchaseListError = undefined; // todo: type this
+  let purchaseList: undefined | PurchaseWRef[] = undefined;
+  let purchaseListError: undefined | FirestoreError = undefined;
 
-  // could modify this query to be X recent, to avoid querying entire collection
-  const unsubPurchasesSnapshot = onSnapshot(query(purchasesCol), (snapshot) => {
-    purchaseList = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      ref: doc.ref,
-    }));
-  });
+  const unsubPurchasesSnapshot = onSnapshot(
+    // could modify this query to be X recent, to avoid querying entire collection
+    query(purchasesCol),
+    (snapshot) => {
+      purchaseList = snapshot.docs.map((doc) => ({
+        ...(doc.data() as Purchase),
+        ref: doc.ref,
+      }));
+    },
+    (error) => {
+      purchaseListError = error;
+    }
+  );
 
   onDestroy(() => {
     unsubPurchasesSnapshot();
