@@ -44,7 +44,7 @@ export class Database {
 
   public async addPurchase(purchase: Purchase) {
     addDoc(this.purchasesCollection, {
-      amount: purchase.amount,
+      amount: parseFloat(purchase.amount),
       category: purchase.category,
       date: purchase.date,
       description: purchase.description,

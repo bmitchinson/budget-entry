@@ -7,7 +7,7 @@
 
 <div class="container-h">
   <div class="container-v">
-    <h1>Budget Entry</h1>
+    <h1>💸</h1>
     <Form />
     <PastPurchases />
   </div>

@@ -39,7 +39,7 @@
 <div class="entry-form">
   <form on:submit={handleSubmit}>
     <div class="row-item space-between">
-      <label for="amount">amount</label>
+      <label for="amount">Amount</label>
       <input
         id="amount"
         name="amount"

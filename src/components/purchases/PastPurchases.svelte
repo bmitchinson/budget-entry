@@ -33,19 +33,33 @@
 
 <div class={"center"}>
   {#if purchaseList}
-    <ul>
+    <table>
       {#each purchaseList as purchase}
-        <li>
-          <p>{purchase.description}: ${purchase.amount}</p>
-          <button on:click={() => Database.get().deletePurchase(purchase.ref)}
-            >delete</button
+        <tr>
+          <th>"{purchase.description}"</th>
+          <th>${purchase.amount.toFixed(2)}</th>
+          <th>{purchase.category}</th>
+          <th
+            ><button
+              on:click={() => Database.get().deletePurchase(purchase.ref)}
+              >x</button
+            ></th
           >
-        </li>
+        </tr>
       {/each}
-    </ul>
+    </table>
   {:else if purchaseListError}
     <p>Error loading purchases</p>
   {:else}
     <p>...loading purchases</p>
   {/if}
 </div>
+
+<style lang="scss">
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 0.5em;
+  }
+</style>
