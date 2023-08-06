@@ -63,7 +63,7 @@
 
 <style lang="scss">
   .purchases-list {
-    height: 13em;
+    height: 11.5em;
     overflow: auto;
   }
 

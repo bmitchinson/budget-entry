@@ -9,6 +9,7 @@
   <div class="container-v">
     <h1>💸</h1>
     <Form />
+    <div class="space" />
     <PastPurchases />
   </div>
 </div>
@@ -24,5 +25,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+  }
+  .space {
+    height: 3em;
   }
 </style>
