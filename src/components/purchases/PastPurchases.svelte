@@ -32,11 +32,8 @@
       {#each purchaseList as purchase}
         <li>
           <p>{purchase.description}: ${purchase.amount}</p>
-          <button
-            on:click={() =>
-              Database.get()
-                .deletePurchase(purchase.ref)
-                .then(() => console.log("todo: clear form"))}>delete</button
+          <button on:click={() => Database.get().deletePurchase(purchase.ref)}
+            >delete</button
           >
         </li>
       {/each}

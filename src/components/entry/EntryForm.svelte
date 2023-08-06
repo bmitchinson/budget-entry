@@ -19,10 +19,13 @@
       date: selectedDate,
       description: "",
     },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
-      handleReset();
-      clearCategoryField();
+    onSubmit: (purchase) => {
+      Database.get()
+        .addPurchase(purchase)
+        .then(() => {
+          handleReset();
+          clearCategoryField();
+        });
     },
   });
 
@@ -78,10 +81,7 @@
     </div>
 
     <div class="row-item center">
-      <button
-        on:click|preventDefault={() => Database.get().addPurchase($form)}
-        type="submit">Submit</button
-      >
+      <button type="submit">Submit</button>
     </div>
   </form>
 </div>
