@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { onSnapshot, query, FirestoreError } from "firebase/firestore";
+  import {
+    onSnapshot,
+    query,
+    FirestoreError,
+    orderBy,
+    limit,
+  } from "firebase/firestore";
   import { onDestroy } from "svelte";
   import type { PurchaseWRef, Purchase } from "../../lib/DatabaseTypes";
   import { Database } from "../../lib/Database";
@@ -8,8 +14,7 @@
   let purchaseListError: undefined | FirestoreError = undefined;
 
   const unsubPurchasesSnapshot = onSnapshot(
-    // could modify this query to be X recent, to avoid querying entire collection
-    query(Database.get().purchasesCollection),
+    query(Database.get().purchasesCollection, orderBy("entryTime"), limit(15)),
     (snapshot) => {
       purchaseList = snapshot.docs.map((doc) => ({
         ...(doc.data() as Purchase),

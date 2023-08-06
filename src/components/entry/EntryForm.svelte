@@ -4,13 +4,12 @@
   import { App } from "@capacitor/app";
   import Autocomplete from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
+  import { Timestamp } from "firebase/firestore";
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0");
   const day = String(today.getDate()).padStart(2, "0");
   const selectedDate = `${today.getFullYear()}-${month}-${day}`;
-
-  let clearCategoryField: () => void;
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
@@ -20,11 +19,11 @@
       description: "",
     },
     onSubmit: (purchase) => {
+      const entryTime = Timestamp.fromDate(new Date());
       Database.get()
-        .addPurchase(purchase)
+        .addPurchase({ ...purchase, entryTime: entryTime })
         .then(() => {
           handleReset();
-          clearCategoryField();
         });
     },
   });
@@ -63,10 +62,7 @@
     </div>
 
     <div class="row-item space-between">
-      <Autocomplete
-        bind:selectedCategory={$form.category}
-        bind:clear={clearCategoryField}
-      />
+      <Autocomplete bind:selectedCategory={$form.category} />
     </div>
 
     <div class="row-item space-between">

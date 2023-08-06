@@ -48,6 +48,7 @@ export class Database {
       category: purchase.category,
       date: purchase.date,
       description: purchase.description,
+      entryTime: purchase.entryTime,
     });
   }
 }
