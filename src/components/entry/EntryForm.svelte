@@ -1,10 +1,13 @@
 <script lang="ts">
   import { createForm } from "svelte-forms-lib";
-  import { onMount } from "svelte";
   import { App } from "@capacitor/app";
   import Autocomplete from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
+
+  App.addListener("appStateChange", ({ isActive }) => {
+    isActive && document.getElementById("amount")?.focus();
+  });
 
   const today = new Date();
   const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -13,26 +16,24 @@
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
-      amount: 0,
+      amount: undefined,
       category: "",
       date: selectedDate,
       description: "",
     },
     onSubmit: (purchase) => {
       const entryTime = Timestamp.fromDate(new Date());
+
       Database.get()
-        .addPurchase({ ...purchase, entryTime: entryTime })
+        .addPurchase({
+          ...purchase,
+          amount: purchase.amount || 0,
+          entryTime: entryTime,
+        })
         .then(() => {
           handleReset();
         });
     },
-  });
-
-  onMount(() => {
-    document.getElementById("amount")?.focus();
-    App.addListener("appStateChange", ({ isActive }) => {
-      isActive && document.getElementById("amount")?.focus();
-    });
   });
 </script>
 
@@ -46,6 +47,7 @@
         type="number"
         step=".01"
         inputmode="decimal"
+        autofocus
         on:change={handleChange}
         bind:value={$form.amount}
       />
