@@ -13,5 +13,7 @@ export interface Purchase {
 }
 
 export interface PurchaseWRef extends Purchase {
-  ref: DocumentReference<unknown, DocumentData>;
+  ref: fbReference;
 }
+
+export type fbReference = DocumentReference<unknown, DocumentData>;

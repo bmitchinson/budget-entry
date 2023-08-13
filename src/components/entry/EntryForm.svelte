@@ -4,6 +4,8 @@
   import Autocomplete from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
+  import { purchaseBeingEdited } from "../../lib/stores/EntryStore";
+  import type { fbReference } from "../../lib/DatabaseTypes";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
@@ -23,17 +25,48 @@
     },
     onSubmit: (purchase) => {
       const entryTime = Timestamp.fromDate(new Date());
-
-      Database.get()
-        .addPurchase({
-          ...purchase,
-          amount: purchase.amount || 0,
-          entryTime: entryTime,
-        })
-        .then(() => {
-          handleReset();
-        });
+      // note: this conditional should / could be combined
+      if ($purchaseBeingEdited) {
+        // note: why is using $ not typed?
+        Database.get()
+          .updatePurchase($purchaseBeingEdited, {
+            ...purchase,
+            amount: purchase.amount || 0,
+            entryTime,
+          })
+          .then(() => {
+            purchaseBeingEdited.set(undefined);
+            handleReset();
+          });
+      } else {
+        Database.get()
+          .addPurchase({
+            ...purchase,
+            amount: purchase.amount || 0,
+            entryTime,
+          })
+          .then(() => {
+            handleReset();
+          });
+      }
     },
+  });
+
+  purchaseBeingEdited.subscribe((purchaseRef: fbReference) => {
+    if (purchaseRef) {
+      Database.get()
+        .getPurchase(purchaseRef)
+        .then((purchase) => {
+          form.set({
+            amount: (purchase as any).amount,
+            category: (purchase as any).category,
+            date: (purchase as any).date,
+            description: (purchase as any).description,
+          });
+        });
+    } else {
+      handleReset();
+    }
   });
 </script>
 
@@ -79,7 +112,22 @@
     </div>
 
     <div class="row-item center">
-      <button type="submit">Submit</button>
+      {#if !$purchaseBeingEdited}
+        <button type="submit">Submit</button>
+        <button on:click|preventDefault={handleReset}>Reset</button>
+      {:else}
+        <button type="submit">Save Edit</button>
+        <button
+          on:click|preventDefault={() => {
+            handleReset();
+            purchaseBeingEdited.set(undefined);
+          }}>Cancel</button
+        >
+      {/if}
+    </div>
+
+    <div class="row-item center">
+      Editing: {$purchaseBeingEdited?.id}
     </div>
   </form>
 </div>

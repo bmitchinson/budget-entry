@@ -9,11 +9,13 @@
   import { onDestroy } from "svelte";
   import type { PurchaseWRef, Purchase } from "../../lib/DatabaseTypes";
   import { Database } from "../../lib/Database";
+  import { purchaseBeingEdited } from "../../lib/stores/EntryStore";
 
   let purchaseList: undefined | PurchaseWRef[] = undefined;
   let purchaseListError: undefined | FirestoreError = undefined;
 
   const unsubPurchasesSnapshot = onSnapshot(
+    // todo: need to type this
     query(Database.get().purchasesCollection, orderBy("entryTime"), limit(15)),
     (snapshot) => {
       purchaseList = snapshot.docs.map((doc) => ({
@@ -34,6 +36,7 @@
 <div class={"center purchases-list"}>
   {#if purchaseList}
     <table>
+      <!-- todo: the purchase being edited should be signified here somehow -->
       {#each purchaseList as purchase}
         <tr>
           <th class="text-left">"{purchase.description}"</th>
@@ -41,13 +44,22 @@
           <th class="text-center">{purchase.category}</th>
           <th class="table-spacer" />
           <th class="text-center button-cell"
-            ><button on:click={() => {}}>Edit</button></th
+            ><button
+              on:click={() => {
+                purchaseBeingEdited.set(purchase.ref);
+              }}>Edit</button
+            ></th
           >
           <th class="text-center button-cell"
             ><button
               on:click={() => {
-                window.confirm(`Delete ${purchase.description} purchase?`) &&
+                const confirmed = window.confirm(
+                  `Delete ${purchase.amount}: ${purchase.description}?}`
+                );
+                if (confirmed) {
                   Database.get().deletePurchase(purchase.ref);
+                  purchaseBeingEdited.set(undefined);
+                }
               }}>x</button
             ></th
           >

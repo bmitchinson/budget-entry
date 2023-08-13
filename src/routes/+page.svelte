@@ -7,6 +7,8 @@
 
 <div class="container-h">
   <div class="container-v">
+    <!-- todo: debug controls by clicking this symbol would be nice -->
+    <!-- ex: dialog to see store contents like (what's under edit) -->
     <h1>💸</h1>
     <Form />
     <div class="space" />

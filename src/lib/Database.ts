@@ -8,8 +8,10 @@ import {
   addDoc,
   deleteDoc,
   Firestore,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
-import type { Purchase } from "./DatabaseTypes";
+import type { Purchase, fbReference } from "./DatabaseTypes";
 
 export class Database {
   private static instance: Database;
@@ -36,19 +38,32 @@ export class Database {
     return collection(this.db, "purchases");
   }
 
-  public async deletePurchase(
-    docRef: DocumentReference<unknown, DocumentData>
-  ) {
+  public async deletePurchase(docRef: fbReference) {
     deleteDoc(docRef);
   }
 
   public async addPurchase(purchase: Purchase) {
-    addDoc(this.purchasesCollection, {
+    addDoc(this.purchasesCollection, this.purchaseToFBPurchase(purchase));
+  }
+
+  public async updatePurchase(docRef: fbReference, purchase: Purchase) {
+    // todo: this should effect entry time
+    // note: that might already be happening, and that's why the past purchase
+    // list shifts?
+    updateDoc(docRef, this.purchaseToFBPurchase(purchase));
+  }
+
+  public async getPurchase(docRef: fbReference) {
+    return getDoc(docRef).then((doc) => doc.data());
+  }
+
+  private purchaseToFBPurchase(purchase: Purchase) {
+    return {
       amount: parseFloat(purchase.amount),
       category: purchase.category,
       date: purchase.date,
       description: purchase.description,
       entryTime: purchase.entryTime,
-    });
+    };
   }
 }
