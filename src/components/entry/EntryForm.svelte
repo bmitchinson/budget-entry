@@ -125,10 +125,6 @@
         >
       {/if}
     </div>
-
-    <div class="row-item center">
-      Editing: {$purchaseBeingEdited?.id}
-    </div>
   </form>
 </div>
 

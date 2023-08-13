@@ -1,15 +1,28 @@
 <script lang="ts">
   import Form from "../components/entry/EntryForm.svelte";
   import PastPurchases from "../components/purchases/PastPurchases.svelte";
+  import { purchaseBeingEdited } from "../lib/stores/EntryStore";
 
   import "../global.scss";
+
+  let debugClicks = 0;
+
+  const debugClick = () => {
+    debugClicks++;
+    if (debugClicks == 3) {
+      const info = {
+        purchaseBeingEditedId: $purchaseBeingEdited?.id,
+        purchaseBeingEditedDescription: $purchaseBeingEdited?.description,
+      };
+      console.log(info);
+      debugClicks = 0;
+    }
+  };
 </script>
 
 <div class="container-h">
   <div class="container-v">
-    <!-- todo: debug controls by clicking this symbol would be nice -->
-    <!-- ex: dialog to see store contents like (what's under edit) -->
-    <h1>💸</h1>
+    <h1 class="emoji" on:click={debugClick}>💸</h1>
     <Form />
     <div class="space" />
     <PastPurchases />
@@ -31,5 +44,9 @@
   }
   .space {
     height: 3em;
+  }
+  .emoji {
+    cursor: default;
+    scale: 2;
   }
 </style>
