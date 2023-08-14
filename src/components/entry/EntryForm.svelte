@@ -74,6 +74,7 @@
   <form on:submit={handleSubmit}>
     <div class="row-item space-between">
       <label for="amount">Amount</label>
+      <!-- svelte-ignore a11y-autofocus -->
       <input
         id="amount"
         name="amount"

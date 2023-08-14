@@ -7,6 +7,11 @@ const config = {
   // for more information about preprocessors
   preprocess: vitePreprocess(),
 
+  onwarn: (warning, handler) => {
+    if (warning.filename.includes("node_modules")) return;
+    handler(warning);
+  },
+
   kit: {
     // adapter-auto (no longer in use with adapter-static addtion)
     // only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.

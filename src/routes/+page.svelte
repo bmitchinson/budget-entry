@@ -14,7 +14,7 @@
         purchaseBeingEditedId: $purchaseBeingEdited?.id,
         purchaseBeingEditedDescription: $purchaseBeingEdited?.description,
       };
-      console.log(info);
+      console.log("DEBUG INFO", info);
       debugClicks = 0;
     }
   };
@@ -22,7 +22,9 @@
 
 <div class="container-h">
   <div class="container-v">
-    <h1 class="emoji" on:click={debugClick}>💸</h1>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+    <h1 class="emoji" on:click={debugClick} data-testid="money-icon">💸</h1>
     <Form />
     <div class="space" />
     <PastPurchases />

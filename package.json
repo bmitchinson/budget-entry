@@ -12,9 +12,14 @@
     "format": "prettier --plugin-search-dir . --write .",
     "sync": "cap sync",
     "ios": "npm run build && npm run sync && npm run xcode",
-    "xcode": "cap open ios"
+    "xcode": "cap open ios",
+    "report": "playwright show-report",
+    "testfull": "playwright test",
+    "testui": "playwright test --ui",
+    "test": "playwright test --project chromium"
   },
   "devDependencies": {
+    "@playwright/test": "^1.37.0",
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/adapter-static": "^2.0.2",
     "@sveltejs/kit": "^1.20.4",
