@@ -1,9 +1,10 @@
 <script lang="ts">
   import Form from "../components/entry/EntryForm.svelte";
   import PastPurchases from "../components/purchases/PastPurchases.svelte";
-  import { purchaseBeingEdited } from "../lib/stores/EntryStore";
+  import { purchaseBeingEdited } from "../lib/Stores";
 
   import "../global.scss";
+  import { Capacitor } from "@capacitor/core";
 
   let debugClicks = 0;
 
@@ -14,7 +15,11 @@
         purchaseBeingEditedId: $purchaseBeingEdited?.id,
         purchaseBeingEditedDescription: $purchaseBeingEdited?.description,
       };
-      console.log("DEBUG INFO", info);
+      if (Capacitor.isNativePlatform()) {
+        alert(JSON.stringify(info));
+      } else {
+        console.log("DEBUG INFO", info);
+      }
       debugClicks = 0;
     }
   };
