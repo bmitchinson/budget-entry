@@ -39,3 +39,9 @@ and on my own away from Intuit. Plus, plaid doesn't connect to my bank.
 - Modifying any past entry
 - Category configuration
 - View spending across categories
+
+## Testing
+
+- Playwright high level e2e tests
+  - Tests reuse some application code to modify database for scenarios
+  - I consider it added coverage :)

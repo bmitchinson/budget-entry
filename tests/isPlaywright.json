@@ -1,0 +1,13 @@
+{
+  "origins": [
+    {
+      "origin": "127.0.0.1",
+      "localStorage": [
+        {
+          "name": "isPlaywright",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}

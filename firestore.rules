@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// All match statements should point to documents, not collections. 
+// A match statement can point to a specific document, as in match /cities/SF
+// or use wildcards to point to any document in the specified path, 
+// as in match /cities/{city}.
+
+// to publish changes here, run firebase deploy
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /purchases/{purchase}/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

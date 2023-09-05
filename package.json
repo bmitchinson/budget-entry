@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "npm run build && vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
@@ -13,10 +13,12 @@
     "sync": "cap sync",
     "ios": "npm run build && npm run sync && npm run xcode",
     "xcode": "cap open ios",
+    "database": "firebase emulators:start",
     "report": "playwright show-report",
     "testfull": "playwright test",
     "testui": "playwright test --ui",
-    "test": "playwright test --project chromium"
+    "test": "playwright test --project chromium",
+    "testci": "firebase emulators:exec \"npm run testfull\""
   },
   "devDependencies": {
     "@playwright/test": "^1.37.0",
