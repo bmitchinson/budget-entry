@@ -4,7 +4,7 @@
   import Autocomplete from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
-  import { purchaseBeingEdited } from "../../lib/stores/EntryStore";
+  import { purchaseBeingEdited } from "../../lib/Stores";
   import type { fbReference } from "../../lib/DatabaseTypes";
 
   App.addListener("appStateChange", ({ isActive }) => {
@@ -25,7 +25,6 @@
     },
     onSubmit: (purchase) => {
       const entryTime = Timestamp.fromDate(new Date());
-      // note: this conditional should / could be combined
       if ($purchaseBeingEdited) {
         // note: why is using $ not typed?
         Database.get()

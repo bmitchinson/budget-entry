@@ -1,43 +1,15 @@
 <script lang="ts">
-  import {
-    onSnapshot,
-    query,
-    FirestoreError,
-    orderBy,
-    limit,
-  } from "firebase/firestore";
-  import { onDestroy } from "svelte";
-  import type { PurchaseWRef, Purchase } from "../../lib/DatabaseTypes";
   import { Database } from "../../lib/Database";
-  import { purchaseBeingEdited } from "../../lib/stores/EntryStore";
+  import { purchaseBeingEdited } from "../../lib/Stores";
 
-  let purchaseList: undefined | PurchaseWRef[] = undefined;
-  let purchaseListError: undefined | FirestoreError = undefined;
-
-  const unsubPurchasesSnapshot = onSnapshot(
-    // todo: need to type this
-    query(Database.get().purchasesCollection, orderBy("entryTime"), limit(15)),
-    (snapshot) => {
-      purchaseList = snapshot.docs.map((doc) => ({
-        ...(doc.data() as Purchase),
-        ref: doc.ref,
-      }));
-    },
-    (error) => {
-      purchaseListError = error;
-    }
-  );
-
-  onDestroy(() => {
-    unsubPurchasesSnapshot();
-  });
+  const purchases = Database.get().getPurchases();
 </script>
 
 <div class={"center purchases-list"}>
-  {#if purchaseList}
+  {#if $purchases.data && !$purchases.error}
     <table>
       <!-- todo: the purchase being edited should be signified here somehow -->
-      {#each purchaseList as purchase}
+      {#each $purchases.data as purchase}
         <tr>
           <th class="text-left">"{purchase.description}"</th>
           <th class="text-right">${purchase.amount.toFixed(2)}</th>
@@ -66,7 +38,7 @@
         </tr>
       {/each}
     </table>
-  {:else if purchaseListError}
+  {:else if $purchases.error}
     <p>Error loading purchases</p>
   {:else}
     <p>...loading purchases</p>

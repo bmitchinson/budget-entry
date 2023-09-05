@@ -1,8 +1,16 @@
 import type {
   DocumentData,
   DocumentReference,
+  FirestoreError,
   Timestamp,
 } from "firebase/firestore";
+
+export interface LiveSubscription<T> {
+  data?: T;
+  error?: FirestoreError;
+}
+
+export type fbReference = DocumentReference;
 
 export interface Purchase {
   amount: number;
@@ -15,5 +23,3 @@ export interface Purchase {
 export interface PurchaseWRef extends Purchase {
   ref: fbReference;
 }
-
-export type fbReference = DocumentReference<unknown, DocumentData>;

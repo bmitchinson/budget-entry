@@ -10,21 +10,51 @@ import {
   Firestore,
   updateDoc,
   getDoc,
+  getFirestore,
+  connectFirestoreEmulator,
+  onSnapshot,
+  query,
+  orderBy,
+  limit,
+  type Unsubscribe,
 } from "firebase/firestore";
-import type { Purchase, fbReference } from "./DatabaseTypes";
+import type {
+  LiveSubscription,
+  Purchase,
+  PurchaseWRef,
+  fbReference,
+} from "./DatabaseTypes";
+import { get, writable } from "svelte/store";
+
+// refactor: after new collections are added this will be huge.
+// How can I split up collections into their own respective classes?
+
+const initialEmptyStore = { data: undefined, error: undefined };
 
 export class Database {
   private static instance: Database;
   private app: FirebaseApp;
   private db: Firestore;
 
+  private subscriptions = {
+    purchases: writable(initialEmptyStore) as writable<
+      LiveSubscription<PurchaseWRef[]>
+    >,
+  };
+
   private constructor() {
     this.app = initializeApp(firebaseConfig);
-    this.db = initializeFirestore(this.app, {
-      localCache: persistentLocalCache({
-        tabManager: persistentMultipleTabManager(),
-      }),
-    });
+    if (localStorage.getItem("isPlaywright")) {
+      console.log("⚠️ - Using fake DB");
+      this.db = getFirestore();
+      connectFirestoreEmulator(this.db, "localhost", 8080);
+    } else {
+      this.db = initializeFirestore(this.app, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
+      });
+    }
   }
 
   public static get(): Database {
@@ -34,36 +64,62 @@ export class Database {
     return Database.instance;
   }
 
-  public get purchasesCollection() {
-    return collection(this.db, "purchases");
+  public getPurchases(): writable<LiveSubscription<PurchaseWRef[]>> {
+    if (!get(this.subscriptions.purchases)?.data) {
+      this.initializePurchasesSubscription();
+    }
+    return this.subscriptions.purchases;
   }
 
-  public async deletePurchase(docRef: fbReference) {
-    deleteDoc(docRef);
+  public async getPurchase(
+    docRef: fbReference
+  ): Promise<PurchaseWRef | undefined> {
+    return getDoc<PurchaseWRef>(docRef).then((doc) => doc.data());
   }
 
-  public async addPurchase(purchase: Purchase) {
-    addDoc(this.purchasesCollection, this.purchaseToFBPurchase(purchase));
+  public async addPurchase(purchase: Purchase): Promise<void> {
+    await addDoc(
+      collection(this.db, "purchases"),
+      this.purchaseToFBPurchase(purchase)
+    );
   }
 
-  public async updatePurchase(docRef: fbReference, purchase: Purchase) {
-    // todo: this should effect entry time
-    // note: that might already be happening, and that's why the past purchase
-    // list shifts?
-    updateDoc(docRef, this.purchaseToFBPurchase(purchase));
+  public async updatePurchase(
+    docRef: fbReference,
+    purchase: Purchase
+  ): Promise<void> {
+    // todo: this should not effect entry time
+    // that might be happening, and that's why the past purchase list shifts?
+    await updateDoc(docRef, this.purchaseToFBPurchase(purchase));
   }
 
-  public async getPurchase(docRef: fbReference) {
-    return getDoc(docRef).then((doc) => doc.data());
+  public async deletePurchase(docRef: fbReference): Promise<void> {
+    await deleteDoc(docRef);
   }
 
   private purchaseToFBPurchase(purchase: Purchase) {
     return {
+      ...purchase,
       amount: parseFloat(purchase.amount),
-      category: purchase.category,
-      date: purchase.date,
-      description: purchase.description,
-      entryTime: purchase.entryTime,
     };
+  }
+
+  private initializePurchasesSubscription() {
+    onSnapshot(
+      query(collection(this.db, "purchases"), orderBy("entryTime"), limit(15)),
+      (snapshot) => {
+        this.subscriptions.purchases.set({
+          data: snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            ref: doc.ref,
+          })),
+        });
+      },
+      (error) => {
+        this.subscriptions.purchases.set({
+          error,
+        });
+      }
+    );
   }
 }
