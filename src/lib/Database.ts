@@ -28,8 +28,11 @@ import { get, writable } from "svelte/store";
 
 // refactor: after new collections are added this will be huge.
 // How can I split up collections into their own respective classes?
+// generic operations?
 
 const initialEmptyStore = { data: undefined, error: undefined };
+
+const inBrowser = typeof window !== "undefined";
 
 export class Database {
   private static instance: Database;
@@ -44,16 +47,16 @@ export class Database {
 
   private constructor() {
     this.app = initializeApp(firebaseConfig);
-    if (localStorage.getItem("isPlaywright")) {
-      console.log("⚠️ - Using fake DB");
-      this.db = getFirestore();
-      connectFirestoreEmulator(this.db, "localhost", 8080);
-    } else {
+    if (inBrowser && !localStorage.getItem("isPlaywright")) {
       this.db = initializeFirestore(this.app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager(),
         }),
       });
+    } else {
+      inBrowser && console.log("⚠️ - Using fake DB");
+      this.db = getFirestore();
+      connectFirestoreEmulator(this.db, "localhost", 8080);
     }
   }
 
@@ -74,7 +77,10 @@ export class Database {
   public async getPurchase(
     docRef: fbReference
   ): Promise<PurchaseWRef | undefined> {
-    return getDoc<PurchaseWRef>(docRef).then((doc) => doc.data());
+    return getDoc<PurchaseWRef>(docRef).then((doc) => ({
+      ...doc.data(),
+      ref: doc.ref,
+    }));
   }
 
   public async addPurchase(purchase: Purchase): Promise<void> {

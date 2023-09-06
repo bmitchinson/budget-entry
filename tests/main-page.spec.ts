@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { clearFirebaseData, createFakePurchases } from "./DatabaseTestUtil";
 
-// TODO: tests
-// test("Past purchases are loaded by default", () => {
-//   // clear and initialize FB data
-//   await page.goto("/");
-// });
+test("Past purchases are loaded by default", async ({ page }) => {
+  await clearFirebaseData().then(createFakePurchases);
+
+  await page.goto("/");
+  await expect(page.getByText("Item one")).toBeAttached();
+  await expect(page.getByText("Item two")).toBeAttached();
+  await expect(page.getByText("Item three")).toBeAttached();
+});
 
 // test.describe("Entry form", () => {
 //   test("Auto focuses on page load", () => {});
@@ -20,6 +24,9 @@ import { test, expect } from "@playwright/test";
 //   test("a purchase initializes the form to the purchase under edit", () => {});
 //   test("a purchase clears the form when completed", () => {});
 //   test("multiple purchases in a row saves appropriate data", () => {});
+// });
+
+// test.describe("Deleting", () => {
 // });
 
 test("clicking header 3 times logs a debug message", async ({ page }) => {
