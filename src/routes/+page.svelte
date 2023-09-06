@@ -23,6 +23,16 @@
       debugClicks = 0;
     }
   };
+
+  (window as any).toggleTestDB = () => {
+    if (localStorage.getItem("isPlaywright") == "true") {
+      localStorage.removeItem("isPlaywright");
+      console.log("Test DB disabled");
+    } else {
+      localStorage.setItem("isPlaywright", "true");
+      console.log("Test DB enabled");
+    }
+  };
 </script>
 
 <div class="container-h">
