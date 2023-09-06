@@ -17,7 +17,7 @@
     "report": "playwright show-report",
     "testfull": "playwright test",
     "testui": "playwright test --ui",
-    "test": "playwright test --project chromium",
+    "test": "playwright test --project \"Desktop Chrome\"",
     "testci": "firebase emulators:exec \"npm run testfull\""
   },
   "devDependencies": {

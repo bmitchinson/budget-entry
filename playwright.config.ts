@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 // require('dotenv').config();
 
-const isPlaywrightFile = "tests/isPlaywright.json";
+const setIsPlaywrightTrue = "tests/isPlaywright.json";
 // note - github sets process.env.CI to true
 
 /**
@@ -28,7 +28,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: "http://localhost:5173",
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -40,7 +40,7 @@ export default defineConfig({
       name: "Desktop Chrome",
       use: {
         ...devices["Desktop Chrome"],
-        storageState: isPlaywrightFile,
+        storageState: setIsPlaywrightTrue,
       },
     },
 
@@ -53,18 +53,18 @@ export default defineConfig({
       name: "Desktop Webkit",
       use: {
         ...devices["Desktop Safari"],
-        storageState: isPlaywrightFile,
+        storageState: setIsPlaywrightTrue,
       },
     },
 
     /* Test against mobile viewports. */
     {
       name: "Mobile Chrome",
-      use: { ...devices["Pixel 5"], storageState: isPlaywrightFile },
+      use: { ...devices["Pixel 5"], storageState: setIsPlaywrightTrue },
     },
     {
       name: "Mobile Safari",
-      use: { ...devices["iPhone 12"], storageState: isPlaywrightFile },
+      use: { ...devices["iPhone 12"], storageState: setIsPlaywrightTrue },
     },
 
     /* Test against branded browsers. */
@@ -81,7 +81,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "npm run dev",
-    url: "http://127.0.0.1:5173",
+    url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
   },
 });
