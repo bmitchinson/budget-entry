@@ -17,6 +17,8 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Install Firebase Tools
+        run: npm i -g firebase-tools
       - name: Run Playwright tests
         run: npm run testci
       - uses: actions/upload-artifact@v3
