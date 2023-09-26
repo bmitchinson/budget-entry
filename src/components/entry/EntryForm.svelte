@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createForm } from "svelte-forms-lib";
   import { App } from "@capacitor/app";
-  import Autocomplete from "./CategorySelect.svelte";
+  import CategorySelect from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
   import { purchaseBeingEdited } from "../../lib/Stores";
@@ -97,7 +97,7 @@
     </div>
 
     <div class="row-item space-between">
-      <Autocomplete bind:selectedCategory={$form.category} />
+      <CategorySelect bind:selectedCategory={$form.category} />
     </div>
 
     <div class="row-item space-between">

@@ -32,7 +32,7 @@ import { get, writable } from "svelte/store";
 
 const initialEmptyStore = { data: undefined, error: undefined };
 
-const inBrowser = typeof window !== "undefined";
+const runningInTest = typeof window == "undefined";
 
 export class Database {
   private static instance: Database;
@@ -47,16 +47,16 @@ export class Database {
 
   private constructor() {
     this.app = initializeApp(firebaseConfig);
-    if (inBrowser && !localStorage.getItem("isPlaywright")) {
+    if (runningInTest || localStorage.getItem("isPlaywright")) {
+      console.log("⚠️ - Using fake DB");
+      this.db = getFirestore();
+      connectFirestoreEmulator(this.db, "localhost", 8080);
+    } else {
       this.db = initializeFirestore(this.app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager(),
         }),
       });
-    } else {
-      inBrowser && console.log("⚠️ - Using fake DB");
-      this.db = getFirestore();
-      connectFirestoreEmulator(this.db, "localhost", 8080);
     }
   }
 

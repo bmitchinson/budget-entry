@@ -1,24 +1,52 @@
 import { test, expect } from "@playwright/test";
 import { clearFirebaseData, createFakePurchases } from "./DatabaseTestUtil";
+import { fillPurchaseFormWithValidData } from "./CommonTestOperations";
+
+test.beforeEach(async () => {
+  await clearFirebaseData().then(createFakePurchases);
+});
 
 test("Past purchases are loaded by default", async ({ page }) => {
-  await clearFirebaseData().then(createFakePurchases);
-
   await page.goto("/");
   await expect(page.getByText("Item one")).toBeAttached();
   await expect(page.getByText("Item two")).toBeAttached();
   await expect(page.getByText("Item three")).toBeAttached();
 });
 
-// test.describe("Entry form", () => {
-//   test("Auto focuses on page load", () => {});
-//   test("Clears the form when entered", () => {});
-// });
+test.describe("Entry form", () => {
+  test("Auto focuses on page load", async ({ page }) => {
+    await page.goto("/");
+    page.evaluate(() => {
+      console.log("active:", JSON.stringify(document.activeElement));
+    });
+    await expect(page.getByLabel("Amount")).toBeFocused();
+  });
 
-// test.describe("Adding", () => {
-//   test("a purchase saves it to the database", () => {});
-//   todo: validation for each field (right now you can just do category)
-// });
+  test("Clears the form when entered", async ({ page }) => {
+    await page.goto("/");
+    await fillPurchaseFormWithValidData(page);
+    await page.getByText("Submit").click();
+
+    await expect(page.getByLabel("Amount")).toHaveText("");
+    await expect(page.getByLabel("Description")).toHaveText("");
+    await expect(page.locator("#category-select")).toHaveText("");
+    await expect(page.getByLabel("Date")).toHaveText("");
+  });
+});
+
+test.describe("Adding", () => {
+  test.skip("a purchase saves it to the database", async ({ page }) => {
+    await clearFirebaseData();
+    await page.goto("/");
+    await fillPurchaseFormWithValidData(page);
+    await page.getByText("Submit").click();
+
+    await expect(page.getByText("cool thing")).toBeAttached();
+    await expect(page.getByText("$10.77")).toBeAttached();
+    await expect(page.getByText("Gas")).toBeAttached();
+  });
+  // todo: validation for each field (right now you can just do category)
+});
 
 // test.describe("Editing", () => {
 //   test("a purchase initializes the form to the purchase under edit", () => {});
