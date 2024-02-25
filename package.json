@@ -15,10 +15,11 @@
     "xcode": "cap open ios",
     "database": "firebase emulators:start",
     "report": "playwright show-report",
-    "testfull": "playwright test",
-    "testui": "playwright test --ui",
+    "test-all-browser": "playwright test",
+    "test-gui": "playwright test --ui",
     "test": "playwright test --project \"Desktop Chrome\"",
-    "testci": "firebase emulators:exec \"npm run testfull\""
+    "test-ci": "firebase emulators:exec \"npm run test-all-browser\"",
+    "write-tests": "playwright codegen localhost:5173"
   },
   "devDependencies": {
     "@playwright/test": "^1.37.0",
@@ -33,7 +34,6 @@
     "prettier": "^2.8.0",
     "prettier-plugin-svelte": "^2.10.1",
     "sass": "^1.63.6",
-    "simple-svelte-autocomplete": "^2.5.2",
     "svelte": "^4.0.0",
     "svelte-check": "^3.4.3",
     "svelte-forms-lib": "^2.0.1",
@@ -47,6 +47,7 @@
     "@capacitor/cli": "^5.0.5",
     "@capacitor/core": "^5.0.5",
     "@capacitor/ios": "^5.0.5",
-    "firebase": "^10.1.0"
+    "firebase": "^10.1.0",
+    "svelecte": "^3.17.2"
   }
 }

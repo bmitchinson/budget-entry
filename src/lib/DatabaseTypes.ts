@@ -10,6 +10,7 @@ export interface LiveSubscription<T> {
   error?: FirestoreError;
 }
 
+// refactor: Rename to FirebaseDocumentReference
 export type fbReference = DocumentReference;
 
 export interface Purchase {

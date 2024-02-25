@@ -1,35 +1,18 @@
 <script lang="ts">
+  import "../global.scss";
+
   import Form from "../components/entry/EntryForm.svelte";
   import PastPurchases from "../components/purchases/PastPurchases.svelte";
-  import { purchaseBeingEdited } from "../lib/Stores";
 
-  import "../global.scss";
-  import { Capacitor } from "@capacitor/core";
+  import { debugClick } from "../lib/Debug";
 
-  let debugClicks = 0;
-
-  const debugClick = () => {
-    debugClicks++;
-    if (debugClicks == 3) {
-      const info = {
-        purchaseBeingEditedId: $purchaseBeingEdited?.id,
-        purchaseBeingEditedDescription: $purchaseBeingEdited?.description,
-      };
-      if (Capacitor.isNativePlatform()) {
-        alert(JSON.stringify(info));
-      } else {
-        console.log("DEBUG INFO", info);
-      }
-      debugClicks = 0;
-    }
-  };
-
+  // refactor: move this to debug, add cache clear, and add page reload
   (window as any).toggleTestDB = () => {
-    if (localStorage.getItem("isPlaywright") == "true") {
-      localStorage.removeItem("isPlaywright");
+    if (localStorage.getItem("useFBEmulator") == "true") {
+      localStorage.removeItem("useFBEmulator");
       console.log("Test DB disabled");
     } else {
-      localStorage.setItem("isPlaywright", "true");
+      localStorage.setItem("useFBEmulator", "true");
       console.log("Test DB enabled");
     }
   };

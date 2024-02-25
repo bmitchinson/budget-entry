@@ -38,6 +38,7 @@ export class Database {
   private static instance: Database;
   private app: FirebaseApp;
   private db: Firestore;
+  private useFirebaseEmulator: Boolean;
 
   private subscriptions = {
     purchases: writable(initialEmptyStore) as writable<
@@ -47,11 +48,16 @@ export class Database {
 
   private constructor() {
     this.app = initializeApp(firebaseConfig);
-    if (runningInTest || localStorage.getItem("isPlaywright")) {
+    this.useFirebaseEmulator = !!(
+      runningInTest || localStorage.getItem("useFBEmulator")
+    );
+
+    if (this.useFirebaseEmulator) {
       console.log("⚠️ - Using fake DB");
       this.db = getFirestore();
       connectFirestoreEmulator(this.db, "localhost", 8080);
     } else {
+      console.log("Using remote firebase");
       this.db = initializeFirestore(this.app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager(),
@@ -60,11 +66,18 @@ export class Database {
     }
   }
 
+  // refactor: can I integrate get() into each method and make each method static?
+  // To change: Database.get().getPurchases() -> Database.getPurchases()
+  // todo -> rename to getInstance and make `private static`
   public static get(): Database {
     if (!Database.instance) {
       Database.instance = new Database();
     }
     return Database.instance;
+  }
+
+  get usingFirebaseEmulator() {
+    return this.useFirebaseEmulator;
   }
 
   public getPurchases(): writable<LiveSubscription<PurchaseWRef[]>> {

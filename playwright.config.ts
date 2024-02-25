@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  */
 // require('dotenv').config();
 
-const setIsPlaywrightTrue = "tests/isPlaywright.json";
+const enableFBEmulatorInTests = "tests/enableFBEmulatorInTests.json";
 // note - github sets process.env.CI to true
 
 /**
@@ -40,7 +40,7 @@ export default defineConfig({
       name: "Desktop Chrome",
       use: {
         ...devices["Desktop Chrome"],
-        storageState: setIsPlaywrightTrue,
+        storageState: enableFBEmulatorInTests,
       },
     },
 
@@ -53,18 +53,18 @@ export default defineConfig({
       name: "Desktop Webkit",
       use: {
         ...devices["Desktop Safari"],
-        storageState: setIsPlaywrightTrue,
+        storageState: enableFBEmulatorInTests,
       },
     },
 
     /* Test against mobile viewports. */
     {
       name: "Mobile Chrome",
-      use: { ...devices["Pixel 5"], storageState: setIsPlaywrightTrue },
+      use: { ...devices["Pixel 5"], storageState: enableFBEmulatorInTests },
     },
     {
       name: "Mobile Safari",
-      use: { ...devices["iPhone 12"], storageState: setIsPlaywrightTrue },
+      use: { ...devices["iPhone 12"], storageState: enableFBEmulatorInTests },
     },
 
     /* Test against branded browsers. */
