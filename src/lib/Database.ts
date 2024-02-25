@@ -25,6 +25,7 @@ import type {
   fbReference,
 } from "./DatabaseTypes";
 import { get, writable } from "svelte/store";
+import { logInfo } from "./Debug";
 
 // refactor: after new collections are added this will be huge.
 // How can I split up collections into their own respective classes?
@@ -53,11 +54,11 @@ export class Database {
     );
 
     if (this.useFirebaseEmulator) {
-      console.log("⚠️ - Using fake DB");
+      logInfo("using firebase emulator");
       this.db = getFirestore();
       connectFirestoreEmulator(this.db, "localhost", 8080);
     } else {
-      console.log("Using remote firebase");
+      logInfo("using real firebase");
       this.db = initializeFirestore(this.app, {
         localCache: persistentLocalCache({
           tabManager: persistentMultipleTabManager(),

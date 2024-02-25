@@ -3,6 +3,16 @@ import { purchaseBeingEdited } from "../lib/Stores";
 import { get } from "svelte/store";
 import { Database } from "./Database";
 
+(window as any).toggleTestDB = () => {
+  if (localStorage.getItem("useFBEmulator") == "true") {
+    localStorage.removeItem("useFBEmulator");
+    logInfo("Test DB disabled, need to reload page");
+  } else {
+    localStorage.setItem("useFBEmulator", "true");
+    logInfo("Test DB enabled, need to reload page");
+  }
+};
+
 let debugClicks = 0;
 
 export const debugClick = () => {
@@ -17,10 +27,16 @@ export const debugClick = () => {
   }
 };
 
+export const logInfo = (msg: String) => {
+  console.log("🧿 // " + msg);
+};
+
 const showBuiltDebugMsg = (info: any) => {
   if (Capacitor.isNativePlatform()) {
     alert(JSON.stringify(info));
   } else {
-    console.log("DEBUG INFO", info);
+    console.log("⚙️ DEBUG INFO:", info);
   }
 };
+
+logInfo("toggleTestDB() will toggle db connection");

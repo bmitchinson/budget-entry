@@ -5,17 +5,6 @@
   import PastPurchases from "../components/purchases/PastPurchases.svelte";
 
   import { debugClick } from "../lib/Debug";
-
-  // refactor: move this to debug, add cache clear, and add page reload
-  (window as any).toggleTestDB = () => {
-    if (localStorage.getItem("useFBEmulator") == "true") {
-      localStorage.removeItem("useFBEmulator");
-      console.log("Test DB disabled");
-    } else {
-      localStorage.setItem("useFBEmulator", "true");
-      console.log("Test DB enabled");
-    }
-  };
 </script>
 
 <div class="container-h">
