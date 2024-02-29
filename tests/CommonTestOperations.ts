@@ -4,5 +4,6 @@ export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Amount").fill("10.77");
   await page.getByLabel("Description").fill("cool thing");
   await page.locator("#category-input").fill("Gas");
+  await page.locator(".sv-item").first().click();
   await page.getByLabel("Date").fill("2023-09-21");
 };

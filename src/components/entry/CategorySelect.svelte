@@ -1,14 +1,19 @@
 <script lang="ts">
   import Svelecte from "svelecte";
 
-  export let selectedCategory: String;
+  let selectionIndex: number = 0;
+
+  const categoryChoices = [
+    { category: "Gas" },
+    { category: "Grocery" },
+    { category: "Date Night" },
+  ];
+
+  export let selectedCategory: string = "";
 
   export const clear = () => {
-    const input = <HTMLInputElement>document.getElementById("category-select");
-    input.value = "";
+    selectedCategory = "";
   };
-
-  const categoryChoices = ["Gas", "Grocery", "Date Night"];
 </script>
 
 <label for="category">Category</label>
@@ -17,4 +22,5 @@
   bind:value={selectedCategory}
   placeholder=""
   inputId="category-input"
+  labelField="category"
 />

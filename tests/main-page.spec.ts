@@ -2,18 +2,23 @@ import { test, expect, type Page } from "@playwright/test";
 import { clearFirebaseData, createFakePurchases } from "./DatabaseTestUtil";
 import { fillPurchaseFormWithValidData } from "./CommonTestOperations";
 
-const purchasesTable = (page: Page) => page.locator(".purchases-list");
+// TODO: Use shadcn/ui
 
 test.beforeEach(async () => {
   await clearFirebaseData().then(createFakePurchases);
 });
 
-// todo: test to write: order by date
-test("Past purchases are loaded by default", async ({ page }) => {
+test("Past purchases are loaded and shown in order", async ({ page }) => {
   await page.goto("/");
-  await expect(purchasesTable(page).getByText("Item one")).toBeAttached();
-  await expect(purchasesTable(page).getByText("Item two")).toBeAttached();
-  await expect(purchasesTable(page).getByText("Item three")).toBeAttached();
+  await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+    "Item One"
+  );
+  await expect(page.getByTestId("purchase-list-item-1")).toContainText(
+    "Item Two"
+  );
+  await expect(page.getByTestId("purchase-list-item-2")).toContainText(
+    "Item Three"
+  );
 });
 
 test.describe("Entry form", () => {
@@ -36,11 +41,11 @@ test.describe("Entry form", () => {
     await expect(page.getByLabel("Date")).toHaveText("");
   });
 
-  // todo: add clear button to form
+  // todo-postshadcn: add clear button to form
 
-  // todo: assert numpad for price
+  // todo-postshadcn: assert numpad for price
 
-  // todo: assert current date time for date time
+  // todo-postshadcn: assert current date time for date time
 });
 
 test.describe("Adding", () => {
@@ -50,14 +55,19 @@ test.describe("Adding", () => {
     await fillPurchaseFormWithValidData(page);
     await page.getByText("Submit").click();
 
-    await expect(purchasesTable(page).getByText("cool thing")).toBeAttached();
-    await expect(purchasesTable(page).getByText("$10.77")).toBeAttached();
-    await expect(purchasesTable(page).getByText("Gas")).toBeAttached();
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+      "cool thing"
+    );
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+      "$10.77"
+    );
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText("Gas");
   });
-  // todo: validation for each field (right now you can just do category)
+
+  // todo-postshadcn: validation for each field (right now you can just do category)
 });
 
-// todo:
+// todo-postshadcn:
 // test.describe("Editing", () => {
 //   test("An edit initializes the form to the purchase under edit", () => {});
 //   test("An edit clears the form when completed", () => {});
@@ -65,15 +75,14 @@ test.describe("Adding", () => {
 //   test("Canceling an edit doesn't save changes")
 // });
 
+// todo:
 // test.describe("Deleting", () => {
 // });
 
-// todo: disable text selection on emoji header
 test("clicking header 3 times logs a debug message", async ({ page }) => {
   let debugPrinted = false;
   page.on("console", (msg) => {
     if (msg.text().includes("DEBUG INFO")) {
-      // todo: assert the debug contents (under an edit scenario)
       debugPrinted = true;
     }
   });
@@ -90,7 +99,7 @@ test("clicking header 3 times logs a debug message", async ({ page }) => {
 test("Tests running in playwright use fake database", async ({ page }) => {
   let fakeDB = undefined;
   page.on("console", (msg) => {
-    if (msg.text().includes("Using fake DB")) {
+    if (msg.text().includes("using firebase emulator")) {
       fakeDB = true;
     }
   });
@@ -103,5 +112,5 @@ test("Tests running in playwright use fake database", async ({ page }) => {
   });
 });
 
-// todo: enable some of these tests to run in offline mode
+// todo-postshadcn: enable some of these tests to run in offline mode
 //     as well?

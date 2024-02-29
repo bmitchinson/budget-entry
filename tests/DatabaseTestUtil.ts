@@ -3,6 +3,7 @@
 import { Timestamp } from "firebase/firestore";
 import type { Purchase } from "../src/lib/DatabaseTypes";
 import { Database } from "../src/lib/Database";
+import { add } from "date-fns";
 
 const fakePurchases: Purchase[] = [
   {
@@ -17,14 +18,14 @@ const fakePurchases: Purchase[] = [
     category: "Restaurants",
     date: "2021-01-02",
     description: "Item Two",
-    entryTime: Timestamp.fromDate(new Date()),
+    entryTime: Timestamp.fromDate(add(new Date(), { seconds: 10 })),
   },
   {
     amount: 100,
     category: "Date Night",
     date: "2021-01-03",
     description: "Item Three",
-    entryTime: Timestamp.fromDate(new Date()),
+    entryTime: Timestamp.fromDate(add(new Date(), { seconds: 20 })),
   },
 ];
 

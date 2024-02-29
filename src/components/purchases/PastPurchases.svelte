@@ -5,13 +5,13 @@
   const purchases = Database.get().getPurchases();
 </script>
 
-<div class={"center purchases-list"}>
+<div class={"center purchase-list"}>
   {#if $purchases.data && !$purchases.error}
     <table>
       <!-- todo: the purchase being edited should be signified here somehow -->
-      {#each $purchases.data as purchase}
-        <tr>
-          <th class="text-left">"{purchase.description}"</th>
+      {#each $purchases.data as purchase, index}
+        <tr data-testid="purchase-list-item-{index}">
+          <th class="text-left">{purchase.description}</th>
           <th class="text-right">${purchase.amount.toFixed(2)}</th>
           <th class="text-center">{purchase.category}</th>
           <th class="table-spacer" />
@@ -25,6 +25,7 @@
           <th class="text-center button-cell"
             ><button
               on:click={() => {
+                // todo: replace this with a confirm to delete option in the row
                 const confirmed = window.confirm(
                   `Delete ${purchase.amount}: ${purchase.description}?}`
                 );
@@ -46,7 +47,7 @@
 </div>
 
 <style lang="scss">
-  .purchases-list {
+  .purchase-list {
     height: 11.5em;
     overflow: auto;
   }

@@ -2,6 +2,7 @@ import { Capacitor } from "@capacitor/core";
 import { purchaseBeingEdited } from "../lib/Stores";
 import { get } from "svelte/store";
 import { Database } from "./Database";
+import { logInfo } from "./Logging";
 
 (window as any).toggleTestDB = () => {
   if (localStorage.getItem("useFBEmulator") == "true") {
@@ -25,10 +26,6 @@ export const debugClick = () => {
       usingFirebaseEmulator: Database.get().usingFirebaseEmulator,
     });
   }
-};
-
-export const logInfo = (msg: String) => {
-  console.log("🧿 // " + msg);
 };
 
 const showBuiltDebugMsg = (info: any) => {

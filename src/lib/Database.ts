@@ -25,7 +25,7 @@ import type {
   fbReference,
 } from "./DatabaseTypes";
 import { get, writable } from "svelte/store";
-import { logInfo } from "./Debug";
+import { logInfo } from "./Logging";
 
 // refactor: after new collections are added this will be huge.
 // How can I split up collections into their own respective classes?
@@ -65,6 +65,8 @@ export class Database {
         }),
       });
     }
+
+    this.initializePurchasesSubscription();
   }
 
   // refactor: can I integrate get() into each method and make each method static?
@@ -82,9 +84,6 @@ export class Database {
   }
 
   public getPurchases(): writable<LiveSubscription<PurchaseWRef[]>> {
-    if (!get(this.subscriptions.purchases)?.data) {
-      this.initializePurchasesSubscription();
-    }
     return this.subscriptions.purchases;
   }
 

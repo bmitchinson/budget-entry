@@ -13,7 +13,7 @@
     "sync": "cap sync",
     "ios": "npm run build && npm run sync && npm run xcode",
     "xcode": "cap open ios",
-    "database": "firebase emulators:start",
+    "firebase": "firebase emulators:start",
     "report": "playwright show-report",
     "test-all-browser": "playwright test",
     "test-gui": "playwright test --ui",
@@ -47,6 +47,7 @@
     "@capacitor/cli": "^5.0.5",
     "@capacitor/core": "^5.0.5",
     "@capacitor/ios": "^5.0.5",
+    "date-fns": "^3.3.1",
     "firebase": "^10.1.0",
     "svelecte": "^3.17.2"
   }

@@ -36,6 +36,7 @@
   }
   .emoji {
     cursor: default;
+    user-select: none;
     scale: 2;
   }
 </style>
