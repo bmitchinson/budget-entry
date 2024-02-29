@@ -10,8 +10,7 @@ export interface LiveSubscription<T> {
   error?: FirestoreError;
 }
 
-// refactor: Rename to FirebaseDocumentReference
-export type fbReference = DocumentReference;
+export type FirebaseDocumentRef = DocumentReference;
 
 export interface Purchase {
   amount: number;
@@ -22,5 +21,5 @@ export interface Purchase {
 }
 
 export interface PurchaseWRef extends Purchase {
-  ref: fbReference;
+  ref: FirebaseDocumentRef;
 }

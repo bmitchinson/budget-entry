@@ -5,7 +5,7 @@
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
   import { purchaseBeingEdited } from "../../lib/Stores";
-  import type { Purchase, fbReference } from "../../lib/DatabaseTypes";
+  import type { Purchase, FirebaseDocumentRef } from "../../lib/DatabaseTypes";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
@@ -48,7 +48,7 @@
     },
   });
 
-  purchaseBeingEdited.subscribe((purchaseRef: fbReference) => {
+  purchaseBeingEdited.subscribe((purchaseRef: FirebaseDocumentRef) => {
     if (purchaseRef) {
       Database.get()
         .getPurchase(purchaseRef)

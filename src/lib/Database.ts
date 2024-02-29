@@ -22,7 +22,7 @@ import type {
   LiveSubscription,
   Purchase,
   PurchaseWRef,
-  fbReference,
+  FirebaseDocumentRef,
 } from "./DatabaseTypes";
 import { get, writable } from "svelte/store";
 import { logInfo } from "./Logging";
@@ -88,7 +88,7 @@ export class Database {
   }
 
   public async getPurchase(
-    docRef: fbReference
+    docRef: FirebaseDocumentRef
   ): Promise<PurchaseWRef | undefined> {
     return getDoc<PurchaseWRef>(docRef).then((doc) => ({
       ...doc.data(),
@@ -104,7 +104,7 @@ export class Database {
   }
 
   public async updatePurchase(
-    docRef: fbReference,
+    docRef: FirebaseDocumentRef,
     purchase: Purchase
   ): Promise<void> {
     // todo: this should not effect entry time
@@ -112,7 +112,7 @@ export class Database {
     await updateDoc(docRef, this.purchaseToFBPurchase(purchase));
   }
 
-  public async deletePurchase(docRef: fbReference): Promise<void> {
+  public async deletePurchase(docRef: FirebaseDocumentRef): Promise<void> {
     await deleteDoc(docRef);
   }
 
