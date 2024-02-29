@@ -17,6 +17,7 @@ import {
   orderBy,
   limit,
   type Unsubscribe,
+  DocumentSnapshot,
 } from "firebase/firestore";
 import type {
   LiveSubscription,
@@ -86,18 +87,14 @@ export class Database {
     return this.subscriptions.purchases;
   }
 
-  public async getPurchase(
-    docRef: FirebaseDocumentRef
-  ): Promise<WithFirebaseDocumentRef<Purchase> | undefined> {
-    return getDoc<Purchase>(docRef).then((doc): String => {
-      if (!doc.exists()) {
-        return undefined;
-      }
-      return {
-        ...doc.data(),
-        ref: doc.ref,
-      };
-    });
+  public async getPurchase(docRef: FirebaseDocumentRef) {
+    return getDoc(docRef).then(this.returnDocIfExists);
+  }
+
+  private returnDocIfExists(
+    doc: DocumentSnapshot
+  ): WithFirebaseDocumentRef<Purchase> | undefined {
+    return doc.exists() ? { ...doc.data(), ref: doc.ref } : undefined;
   }
 
   public async addPurchase(purchase: Purchase): Promise<void> {
@@ -108,7 +105,9 @@ export class Database {
     docRef: FirebaseDocumentRef,
     purchase: Purchase
   ): Promise<void> {
-    await updateDoc(docRef, purchase);
+    // https://github.com/firebase/firebase-js-sdk/issues/5853#issuecomment-1304427284
+    // not sure why I need to spread
+    await updateDoc(docRef, { ...purchase });
   }
 
   public async deletePurchase(docRef: FirebaseDocumentRef): Promise<void> {
