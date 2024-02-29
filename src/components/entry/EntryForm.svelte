@@ -5,7 +5,7 @@
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
   import { purchaseBeingEdited } from "../../lib/Stores";
-  import type { fbReference } from "../../lib/DatabaseTypes";
+  import type { Purchase, fbReference } from "../../lib/DatabaseTypes";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
@@ -23,27 +23,24 @@
       date: selectedDate,
       description: "",
     },
-    onSubmit: (purchase) => {
+    onSubmit: (formData) => {
       const entryTime = Timestamp.fromDate(new Date());
+      const purchase: Purchase = {
+        ...formData,
+        amount: formData.amount || 0,
+        entryTime,
+      };
       if ($purchaseBeingEdited) {
-        // note: why is using $ not typed?
+        // TODO: why is using $ not typed?
         Database.get()
-          .updatePurchase($purchaseBeingEdited, {
-            ...purchase,
-            amount: purchase.amount || 0,
-            entryTime,
-          })
+          .updatePurchase($purchaseBeingEdited, purchase)
           .then(() => {
             purchaseBeingEdited.set(undefined);
             handleReset();
           });
       } else {
         Database.get()
-          .addPurchase({
-            ...purchase,
-            amount: purchase.amount || 0,
-            entryTime,
-          })
+          .addPurchase(purchase)
           .then(() => {
             handleReset();
           });
