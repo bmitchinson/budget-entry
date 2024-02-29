@@ -97,7 +97,7 @@ test("clicking header 3 times logs a debug message", async ({ page }) => {
 });
 
 test("Tests running in playwright use fake database", async ({ page }) => {
-  let fakeDB = undefined;
+  let fakeDB = false;
   page.on("console", (msg) => {
     if (msg.text().includes("using firebase emulator")) {
       fakeDB = true;

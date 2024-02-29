@@ -1,5 +1,5 @@
 import { firebaseConfig } from "./config";
-import { initializeApp } from "firebase/app";
+import { initializeApp, type FirebaseApp } from "firebase/app";
 import {
   initializeFirestore,
   collection,
@@ -23,7 +23,6 @@ import type {
   Purchase,
   FirebaseDocumentRef,
   WithFirebaseDocumentRef,
-  PurchaseWithRef,
 } from "./DatabaseTypes";
 import { get, writable } from "svelte/store";
 import { logInfo } from "./Logging";

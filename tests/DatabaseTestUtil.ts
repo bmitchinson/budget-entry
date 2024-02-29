@@ -30,7 +30,7 @@ const fakePurchases: Purchase[] = [
 ];
 
 export const createFakePurchases = () => {
-  const promises = [];
+  const promises: Promise<void>[] = [];
 
   fakePurchases.forEach((purchase) => {
     promises.push(Database.get().addPurchase(purchase));
