@@ -21,8 +21,9 @@ import {
 import type {
   LiveSubscription,
   Purchase,
-  PurchaseWRef,
   FirebaseDocumentRef,
+  WithFirebaseDocumentRef,
+  PurchaseWithRef,
 } from "./DatabaseTypes";
 import { get, writable } from "svelte/store";
 import { logInfo } from "./Logging";
@@ -43,7 +44,7 @@ export class Database {
 
   private subscriptions = {
     purchases: writable(initialEmptyStore) as writable<
-      LiveSubscription<PurchaseWRef[]>
+      LiveSubscription<WithFirebaseDocumentRef<Purchase>[]>
     >,
   };
 
@@ -69,9 +70,6 @@ export class Database {
     this.initializePurchasesSubscription();
   }
 
-  // refactor: can I integrate get() into each method and make each method static?
-  // To change: Database.get().getPurchases() -> Database.getPurchases()
-  // todo -> rename to getInstance and make `private static`
   public static get(): Database {
     if (!Database.instance) {
       Database.instance = new Database();
@@ -83,17 +81,24 @@ export class Database {
     return this.useFirebaseEmulator;
   }
 
-  public getPurchases(): writable<LiveSubscription<PurchaseWRef[]>> {
+  public getPurchases(): writable<
+    LiveSubscription<WithFirebaseDocumentRef<Purchase>>
+  > {
     return this.subscriptions.purchases;
   }
 
   public async getPurchase(
     docRef: FirebaseDocumentRef
-  ): Promise<PurchaseWRef | undefined> {
-    return getDoc<PurchaseWRef>(docRef).then((doc) => ({
-      ...doc.data(),
-      ref: doc.ref,
-    }));
+  ): Promise<WithFirebaseDocumentRef<Purchase> | undefined> {
+    return getDoc<Purchase>(docRef).then((doc): String => {
+      if (!doc.exists()) {
+        return undefined;
+      }
+      return {
+        ...doc.data(),
+        ref: doc.ref,
+      };
+    });
   }
 
   public async addPurchase(purchase: Purchase): Promise<void> {
@@ -125,6 +130,8 @@ export class Database {
 
   private initializePurchasesSubscription() {
     onSnapshot(
+      // TODO: date needs to become purchaseTime
+      // want to sort by date, not entry. Date isn't specific enough to sort.
       query(collection(this.db, "purchases"), orderBy("entryTime"), limit(15)),
       (snapshot) => {
         this.subscriptions.purchases.set({

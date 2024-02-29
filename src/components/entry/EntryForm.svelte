@@ -18,7 +18,7 @@
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
-      amount: undefined,
+      amount: 0,
       category: "",
       date: selectedDate,
       description: "",
@@ -31,7 +31,6 @@
         entryTime,
       };
       if ($purchaseBeingEdited) {
-        // TODO: why is using $ not typed?
         Database.get()
           .updatePurchase($purchaseBeingEdited, purchase)
           .then(() => {
@@ -53,12 +52,14 @@
       Database.get()
         .getPurchase(purchaseRef)
         .then((purchase) => {
-          form.set({
-            amount: (purchase as any).amount,
-            category: (purchase as any).category,
-            date: (purchase as any).date,
-            description: (purchase as any).description,
-          });
+          if (purchase != undefined) {
+            form.set({
+              amount: purchase.amount,
+              category: purchase.category,
+              date: purchase.date,
+              description: purchase.description,
+            });
+          }
         });
     } else {
       handleReset();
