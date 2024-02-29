@@ -101,36 +101,25 @@ export class Database {
   }
 
   public async addPurchase(purchase: Purchase): Promise<void> {
-    await addDoc(
-      collection(this.db, "purchases"),
-      this.purchaseToFBPurchase(purchase)
-    );
+    await addDoc(collection(this.db, "purchases"), purchase);
   }
 
   public async updatePurchase(
     docRef: FirebaseDocumentRef,
     purchase: Purchase
   ): Promise<void> {
-    // todo: this should not effect entry time
-    // that might be happening, and that's why the past purchase list shifts?
-    await updateDoc(docRef, this.purchaseToFBPurchase(purchase));
+    await updateDoc(docRef, purchase);
   }
 
   public async deletePurchase(docRef: FirebaseDocumentRef): Promise<void> {
     await deleteDoc(docRef);
   }
 
-  private purchaseToFBPurchase(purchase: Purchase) {
-    return {
-      ...purchase,
-      amount: parseFloat(purchase.amount),
-    };
-  }
-
   private initializePurchasesSubscription() {
     onSnapshot(
-      // TODO: date needs to become purchaseTime
+      // todo-postshadcn: date needs to become purchaseTime
       // want to sort by date, not entry. Date isn't specific enough to sort.
+      // todo-postshadcn: get all within timespan from UI, instead of limiting to 15
       query(collection(this.db, "purchases"), orderBy("entryTime"), limit(15)),
       (snapshot) => {
         this.subscriptions.purchases.set({

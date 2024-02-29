@@ -67,7 +67,7 @@ test.describe("Adding", () => {
   // todo-postshadcn: validation for each field (right now you can just do category)
 });
 
-// todo-postshadcn:
+// todo: want tests here before validation/form library because edit interacts w the store a lot
 // test.describe("Editing", () => {
 //   test("An edit initializes the form to the purchase under edit", () => {});
 //   test("An edit clears the form when completed", () => {});
@@ -112,5 +112,9 @@ test("Tests running in playwright use fake database", async ({ page }) => {
   });
 });
 
-// todo-postshadcn: enable some of these tests to run in offline mode
+// todo: enable some of these tests to run in offline mode
 //     as well?
+// - add purchase, block FB, add 2nd purchase, refresh page (FB Still blocked), are both purchases there?
+//    - same but with delete as the operation instead of add
+// - ^ that was the core of why I wanted to use firebase so .... hope those work?
+// https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
