@@ -15,9 +15,9 @@
     "xcode": "cap open ios",
     "firebase": "firebase emulators:start",
     "report": "playwright show-report",
-    "test-all-browser": "playwright test",
-    "test-gui": "playwright test --ui",
-    "test": "playwright test --project \"Desktop Chrome\"",
+    "test-all-browser": "playwright test --workers=1",
+    "test-gui": "playwright test --ui --workers=1",
+    "test": "playwright test --project \"Desktop Chrome\" --workers=1",
     "test-ci": "firebase emulators:exec \"npm run test-all-browser\"",
     "write-tests": "playwright codegen localhost:5173"
   },
