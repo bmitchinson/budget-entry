@@ -18,6 +18,7 @@ import {
   limit,
   type Unsubscribe,
   DocumentSnapshot,
+  Query,
 } from "firebase/firestore";
 import type {
   LiveSubscription,
@@ -112,26 +113,39 @@ export class Database {
     await deleteDoc(docRef);
   }
 
-  // refactor: make generic --- initializeSubscription<T>(query, store)
-  private initializePurchasesSubscription() {
+  private initializeSubscription<T>(
+    query: Query,
+    store: Writable<LiveSubscription<any>>
+  ) {
     onSnapshot(
-      // todo-postshadcn: date needs to become purchaseTime
-      // want to sort by date, not entry. Date isn't specific enough to sort.
-      // todo-postshadcn: get all within timespan from UI, instead of limiting to 15
-      query(collection(this.db, "purchases"), orderBy("entryTime"), limit(15)),
+      query,
       (snapshot) => {
-        this.subscriptions.purchases.set({
+        store.set({
           data: snapshot.docs.map((doc) => ({
-            ...(doc.data() as Purchase),
+            ...(doc.data() as T),
             ref: doc.ref,
           })),
         });
       },
       (error) => {
-        this.subscriptions.purchases.set({
+        store.set({
           error,
         });
       }
     );
+  }
+
+  private initializePurchasesSubscription() {
+    // todo-postshadcn: date needs to become purchaseTime
+    // want to sort by date, not entry. Date isn't specific enough to sort.
+    // todo-postshadcn: get all within timespan from UI, instead of limiting to 15
+    const q = query(
+      collection(this.db, "purchases"),
+      orderBy("entryTime"),
+      limit(15)
+    );
+
+    const store = this.subscriptions.purchases;
+    this.initializeSubscription<Purchase>(q, store);
   }
 }
