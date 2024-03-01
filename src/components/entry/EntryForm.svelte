@@ -5,7 +5,7 @@
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
   import { purchaseBeingEdited } from "../../lib/Stores";
-  import type { Purchase, FirebaseDocumentRef } from "../../lib/DatabaseTypes";
+  import type { Purchase } from "../../lib/DatabaseTypes";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
@@ -18,7 +18,7 @@
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
-      amount: 0,
+      amount: "",
       category: "",
       date: selectedDate,
       description: "",
@@ -27,12 +27,12 @@
       const entryTime = Timestamp.fromDate(new Date());
       const purchase: Purchase = {
         ...formData,
-        amount: formData.amount || 0,
+        amount: parseFloat(formData.amount) || 0,
         entryTime,
       };
       if ($purchaseBeingEdited) {
         Database.get()
-          .updatePurchase($purchaseBeingEdited, purchase)
+          .updatePurchase($purchaseBeingEdited.ref, purchase)
           .then(() => {
             purchaseBeingEdited.set(undefined);
             handleReset();
@@ -47,20 +47,14 @@
     },
   });
 
-  purchaseBeingEdited.subscribe((purchaseRef: FirebaseDocumentRef) => {
-    if (purchaseRef) {
-      Database.get()
-        .getPurchase(purchaseRef)
-        .then((purchase) => {
-          if (purchase != undefined) {
-            form.set({
-              amount: purchase.amount,
-              category: purchase.category,
-              date: purchase.date,
-              description: purchase.description,
-            });
-          }
-        });
+  purchaseBeingEdited.subscribe((purchase) => {
+    if (purchase) {
+      form.set({
+        amount: purchase.amount.toString(),
+        category: purchase.category,
+        date: purchase.date,
+        description: purchase.description,
+      });
     } else {
       handleReset();
     }

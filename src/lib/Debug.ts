@@ -21,7 +21,7 @@ export const debugClick = () => {
   if (debugClicks == 3) {
     debugClicks = 0;
     showBuiltDebugMsg({
-      purchaseBeingEditedId: get(purchaseBeingEdited)?.id,
+      purchaseBeingEditedId: get(purchaseBeingEdited)?.ref.id,
       purchaseBeingEditedDescription: get(purchaseBeingEdited)?.description,
       usingFirebaseEmulator: Database.get().usingFirebaseEmulator,
     });

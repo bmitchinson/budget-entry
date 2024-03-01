@@ -25,7 +25,7 @@ import type {
   FirebaseDocumentRef,
   WithFirebaseDocumentRef,
 } from "./DatabaseTypes";
-import { get, writable } from "svelte/store";
+import { get, writable, type Writable } from "svelte/store";
 import { logInfo } from "./Logging";
 
 // refactor: after new collections are added this will be huge.
@@ -43,7 +43,7 @@ export class Database {
   private useFirebaseEmulator: Boolean;
 
   private subscriptions = {
-    purchases: writable(initialEmptyStore) as writable<
+    purchases: writable(initialEmptyStore) as Writable<
       LiveSubscription<WithFirebaseDocumentRef<Purchase>[]>
     >,
   };
@@ -70,6 +70,10 @@ export class Database {
     this.initializePurchasesSubscription();
   }
 
+  get usingFirebaseEmulator() {
+    return this.useFirebaseEmulator;
+  }
+
   public static get(): Database {
     if (!Database.instance) {
       Database.instance = new Database();
@@ -77,24 +81,18 @@ export class Database {
     return Database.instance;
   }
 
-  get usingFirebaseEmulator() {
-    return this.useFirebaseEmulator;
+  private returnDocIfExists<T>(
+    doc: DocumentSnapshot
+  ): WithFirebaseDocumentRef<T> | undefined {
+    return doc.exists() ? { ...(doc.data() as T), ref: doc.ref } : undefined;
   }
 
-  public getPurchases(): writable<
-    LiveSubscription<WithFirebaseDocumentRef<Purchase>>
-  > {
+  public getPurchasesStore() {
     return this.subscriptions.purchases;
   }
 
   public async getPurchase(docRef: FirebaseDocumentRef) {
-    return getDoc(docRef).then(this.returnDocIfExists);
-  }
-
-  private returnDocIfExists(
-    doc: DocumentSnapshot
-  ): WithFirebaseDocumentRef<Purchase> | undefined {
-    return doc.exists() ? { ...doc.data(), ref: doc.ref } : undefined;
+    return getDoc(docRef).then(this.returnDocIfExists<Purchase>);
   }
 
   public async addPurchase(purchase: Purchase): Promise<void> {
@@ -114,6 +112,7 @@ export class Database {
     await deleteDoc(docRef);
   }
 
+  // refactor: make generic --- initializeSubscription<T>(query, store)
   private initializePurchasesSubscription() {
     onSnapshot(
       // todo-postshadcn: date needs to become purchaseTime
@@ -123,7 +122,7 @@ export class Database {
       (snapshot) => {
         this.subscriptions.purchases.set({
           data: snapshot.docs.map((doc) => ({
-            ...doc.data(),
+            ...(doc.data() as Purchase),
             ref: doc.ref,
           })),
         });

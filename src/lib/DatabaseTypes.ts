@@ -20,4 +20,4 @@ export interface Purchase {
   entryTime: Timestamp;
 }
 
-export type WithFirebaseDocumentRef<T> = T & FirebaseDocumentRef;
+export type WithFirebaseDocumentRef<T> = T & { ref: FirebaseDocumentRef };
