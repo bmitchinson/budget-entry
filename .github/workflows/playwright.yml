@@ -15,12 +15,14 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
+      - name: Run Build
+        run: npm run build
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Install Firebase Tools
         run: npm i -g firebase-tools
       - name: Run Playwright tests
-        run: npm run testci
+        run: npm run test-ci
       - uses: actions/upload-artifact@v3
         if: always()
         with:

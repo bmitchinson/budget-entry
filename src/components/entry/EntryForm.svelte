@@ -127,5 +127,6 @@
   button {
     padding: 1em 2em;
     -webkit-appearance: none;
+    // todo: try just appearance
   }
 </style>
