@@ -1,8 +1,6 @@
 <script lang="ts">
   import Svelecte from "svelecte";
 
-  let selectionIndex: number = 0;
-
   const categoryChoices = [
     { category: "Gas" },
     { category: "Grocery" },
