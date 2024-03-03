@@ -120,6 +120,8 @@ test.describe("Editing", () => {
 });
 
 // todo: test.describe("Deleting", () => {});
+// deleting one and three, assert 2
+// deleting on under edit, assert 2 and form is empty
 
 test("clicking header 3 times logs a debug message", async ({ page }) => {
   let debugPrinted = false;
