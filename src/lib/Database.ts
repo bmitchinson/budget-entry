@@ -139,6 +139,7 @@ export class Database {
     // todo-postshadcn: date needs to become purchaseTime
     // want to sort by date, not entry. Date isn't specific enough to sort.
     // todo-postshadcn: get all within timespan from UI, instead of limiting to 15
+    // todo-postshadcn -> sort in most recent first
     const q = query(
       collection(this.db, "purchases"),
       orderBy("entryTime"),

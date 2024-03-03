@@ -8,7 +8,7 @@ import { add } from "date-fns";
 const fakePurchases: Purchase[] = [
   {
     amount: 123.45,
-    category: "Food",
+    category: "Gas",
     date: "2021-01-01",
     description: "Item One",
     entryTime: Timestamp.fromDate(new Date()),

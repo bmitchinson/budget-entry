@@ -1,6 +1,18 @@
 import { test, expect, type Page } from "@playwright/test";
 import { clearFirebaseData, createFakePurchases } from "./DatabaseTestUtil";
-import { fillPurchaseFormWithValidData } from "./CommonTestOperations";
+import {
+  amountOnForm,
+  categoryOnForm,
+  clickCancelEdit,
+  clickEditForPurchaseIndex,
+  clickSaveEdit,
+  dateOnForm,
+  descriptionOnForm,
+  expectFormToBeEmpty,
+  fillPurchaseFormWithValidData,
+  purchasesOnPage,
+} from "./CommonTestOperations";
+import { format } from "date-fns";
 
 // TODO: Use shadcn/ui
 
@@ -67,17 +79,47 @@ test.describe("Adding", () => {
   // todo-postshadcn: validation for each field (right now you can just do category)
 });
 
-// todo: want tests here before validation/form library because edit interacts w the store a lot
-// test.describe("Editing", () => {
-//   test("An edit initializes the form to the purchase under edit", () => {});
-//   test("An edit clears the form when completed", () => {});
-//   test("Canceling an edit clears form contents")
-//   test("Canceling an edit doesn't save changes")
-// });
+test.describe("Editing", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/");
+    await clickEditForPurchaseIndex(page, 0);
+  });
 
-// todo:
-// test.describe("Deleting", () => {
-// });
+  test("An edit initializes the form to the purchase under edit", async ({
+    page,
+  }) => {
+    await expect(await amountOnForm(page)).toBe("123.45");
+    await expect(await descriptionOnForm(page)).toBe("Item One");
+    await expect(await categoryOnForm(page)).toBe("Gas");
+    await expect(await dateOnForm(page)).toBe("2021-01-01");
+  });
+
+  test("Canceling an edit clears form contents", async ({ page }) => {
+    await clickCancelEdit(page);
+    await expectFormToBeEmpty(page);
+  });
+  test("Canceling an edit doesn't save changes", async ({ page }) => {
+    await clickCancelEdit(page);
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+      "Item One"
+    );
+  });
+
+  test("Completed edits are persisted", async ({ page }) => {
+    await fillPurchaseFormWithValidData(page);
+    await clickSaveEdit(page);
+    await expect(await purchasesOnPage(page)).toBe(3);
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+      "cool thing"
+    );
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
+      "$10.77"
+    );
+    await expect(page.getByTestId("purchase-list-item-0")).toContainText("Gas");
+  });
+});
+
+// todo: test.describe("Deleting", () => {});
 
 test("clicking header 3 times logs a debug message", async ({ page }) => {
   let debugPrinted = false;

@@ -15,8 +15,10 @@ export type FirebaseDocumentRef = DocumentReference;
 export interface Purchase {
   amount: number;
   category: string;
+  // refactor: purchaseDateTime
   date: string;
   description: string;
+  // refactor: entryDateTime
   entryTime: Timestamp;
 }
 

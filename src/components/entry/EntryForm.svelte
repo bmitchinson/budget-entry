@@ -73,6 +73,7 @@
         step=".01"
         inputmode="decimal"
         autofocus
+        data-testid="amount-input"
         on:change={handleChange}
         bind:value={$form.amount}
       />
@@ -83,6 +84,7 @@
       <input
         id="description"
         name="description"
+        data-testid="description-input"
         on:change={handleChange}
         bind:value={$form.description}
       />
@@ -98,6 +100,7 @@
         id="date"
         name="date"
         type="date"
+        data-testid="date-input"
         on:change={handleChange}
         bind:value={$form.date}
       />
@@ -127,6 +130,5 @@
   button {
     padding: 1em 2em;
     -webkit-appearance: none;
-    // todo: try just appearance
   }
 </style>

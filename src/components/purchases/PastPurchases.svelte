@@ -17,6 +17,7 @@
           <th class="table-spacer" />
           <th class="text-center button-cell"
             ><button
+              data-testid="edit-{index}"
               on:click={() => {
                 purchaseBeingEdited.set(purchase);
               }}>Edit</button
