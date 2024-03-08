@@ -9,7 +9,7 @@ export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Date").fill("2023-09-21");
 };
 
-export const clickEditForPurchaseIndex = async (page: Page, index: number) => {
+export const clickEditAtPurchaseIndex = async (page: Page, index: number) => {
   await page.getByTestId(`edit-${index}`).click();
 };
 
@@ -19,6 +19,10 @@ export const clickSaveEdit = async (page: Page) => {
 
 export const clickCancelEdit = async (page: Page) => {
   await page.getByText("Cancel").click();
+};
+
+export const clickDeletePurchaseAtIndex = async (page: Page, index: number) => {
+  await page.getByTestId("delete-item-" + index).click();
 };
 
 export const expectFormToBeEmpty = async (page: Page) => {
@@ -51,3 +55,17 @@ export const categoryOnForm = async (page: Page) => {
 
 export const dateOnForm = async (page: Page) =>
   await page.getByTestId("date-input").inputValue();
+
+export const expectTheseAtPurchaseIndex = async (
+  page: Page,
+  values: string[],
+  index: number
+) => {
+  let expectations: Promise<any>[] = [];
+  values.forEach((v) => {
+    expectations.push(
+      expect(page.getByTestId("purchase-list-item-" + index)).toContainText(v)
+    );
+  });
+  await Promise.all(expectations);
+};

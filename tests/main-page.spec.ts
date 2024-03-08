@@ -4,24 +4,26 @@ import {
   amountOnForm,
   categoryOnForm,
   clickCancelEdit,
-  clickEditForPurchaseIndex,
+  clickEditAtPurchaseIndex,
   clickSaveEdit,
   dateOnForm,
+  clickDeletePurchaseAtIndex,
   descriptionOnForm,
   expectFormToBeEmpty,
   fillPurchaseFormWithValidData,
   purchasesOnPage,
+  expectTheseAtPurchaseIndex,
 } from "./CommonTestOperations";
 import { format } from "date-fns";
 
 // TODO: Use shadcn/ui
 
-test.beforeEach(async () => {
+test.beforeEach(async ({ page }) => {
   await clearFirebaseData().then(createFakePurchases);
+  await page.goto("/");
 });
 
 test("Past purchases are loaded and shown in order", async ({ page }) => {
-  await page.goto("/");
   await expect(page.getByTestId("purchase-list-item-0")).toContainText(
     "Item One"
   );
@@ -35,7 +37,6 @@ test("Past purchases are loaded and shown in order", async ({ page }) => {
 
 test.describe("Entry form", () => {
   test("Auto focuses on page load", async ({ page }) => {
-    await page.goto("/");
     page.evaluate(() => {
       console.log("active:", JSON.stringify(document.activeElement));
     });
@@ -43,7 +44,6 @@ test.describe("Entry form", () => {
   });
 
   test("Clears the form when entered", async ({ page }) => {
-    await page.goto("/");
     await fillPurchaseFormWithValidData(page);
     await page.getByText("Submit").click();
 
@@ -62,8 +62,7 @@ test.describe("Entry form", () => {
 
 test.describe("Adding", () => {
   test("Adding a purchase saves it to the database", async ({ page }) => {
-    await clearFirebaseData();
-    await page.goto("/");
+    await clearFirebaseData().then(() => page.goto("/"));
     await fillPurchaseFormWithValidData(page);
     await page.getByText("Submit").click();
 
@@ -81,8 +80,7 @@ test.describe("Adding", () => {
 
 test.describe("Editing", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    await clickEditForPurchaseIndex(page, 0);
+    await clickEditAtPurchaseIndex(page, 0);
   });
 
   test("An edit initializes the form to the purchase under edit", async ({
@@ -109,18 +107,48 @@ test.describe("Editing", () => {
     await fillPurchaseFormWithValidData(page);
     await clickSaveEdit(page);
     await expect(await purchasesOnPage(page)).toBe(3);
-    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
-      "cool thing"
-    );
-    await expect(page.getByTestId("purchase-list-item-0")).toContainText(
-      "$10.77"
-    );
-    await expect(page.getByTestId("purchase-list-item-0")).toContainText("Gas");
+    await expectTheseAtPurchaseIndex(page, ["cool thing", "$10.77", "Gas"], 0);
   });
+
+  // TODO: editing signified
 });
 
-// todo: test.describe("Deleting", () => {});
-// deleting one and three, assert 2
+test.describe("Deleting", () => {
+  test("Hitting delete twice will delete a purchase", async ({ page }) => {
+    await clickDeletePurchaseAtIndex(page, 2);
+    await clickDeletePurchaseAtIndex(page, 2);
+    await clickDeletePurchaseAtIndex(page, 0);
+    await clickDeletePurchaseAtIndex(page, 0);
+    await expect(await purchasesOnPage(page)).toBe(1);
+    await expectTheseAtPurchaseIndex(
+      page,
+      ["Item Two", "$456.12", "Restaurants"],
+      0
+    );
+  });
+  test("Hitting delete once will *not* delete a purchase", async ({ page }) => {
+    await clickDeletePurchaseAtIndex(page, 0);
+    await expect(await purchasesOnPage(page)).toBe(3);
+  });
+  test("Hitting delete twice not in immediate sequence will not delete", async ({
+    page,
+  }) => {
+    await clickDeletePurchaseAtIndex(page, 2);
+    await clickDeletePurchaseAtIndex(page, 1);
+    await clickDeletePurchaseAtIndex(page, 0);
+    await clickDeletePurchaseAtIndex(page, 2);
+    await clickDeletePurchaseAtIndex(page, 1);
+    await clickDeletePurchaseAtIndex(page, 0);
+    await expect(await purchasesOnPage(page)).toBe(3);
+  });
+  test("Deleting clears any purchase from being under edit", async ({
+    page,
+  }) => {
+    await clickDeletePurchaseAtIndex(page, 2);
+    await clickDeletePurchaseAtIndex(page, 2);
+    await expectFormToBeEmpty(page);
+  });
+});
 // deleting on under edit, assert 2 and form is empty
 
 test("clicking header 3 times logs a debug message", async ({ page }) => {
@@ -162,3 +190,5 @@ test("Tests running in playwright use fake database", async ({ page }) => {
 //    - same but with delete as the operation instead of add
 // - ^ that was the core of why I wanted to use firebase so .... hope those work?
 // https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
+
+// todo: rules for firebase to require login?

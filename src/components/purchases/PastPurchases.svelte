@@ -2,6 +2,8 @@
   import { Database } from "../../lib/Database";
   import { purchaseBeingEdited } from "../../lib/Stores";
 
+  let deleteUnderConfirmation: number | undefined = undefined;
+
   const purchases = Database.get().getPurchasesStore();
 </script>
 
@@ -11,6 +13,7 @@
       <!-- todo-ui: the purchase being edited should be signified in the list here -->
       {#each $purchases.data as purchase, index}
         <tr data-testid="purchase-list-item-{index}">
+          <!-- todo: Indicate it's being edited -->
           <th class="text-left">{purchase.description}</th>
           <th class="text-right">${purchase.amount.toFixed(2)}</th>
           <th class="text-center">{purchase.category}</th>
@@ -23,18 +26,18 @@
               }}>Edit</button
             ></th
           >
-          <th class="text-center button-cell"
+          <th class="text-center button-cell" data-testid="delete-item-{index}"
             ><button
               on:click={() => {
-                // todo: replace this with a confirm to delete option in the row
-                const confirmed = window.confirm(
-                  `Delete ${purchase.amount}: ${purchase.description}?}`
-                );
-                if (confirmed) {
+                if (deleteUnderConfirmation === index) {
                   Database.get().deletePurchase(purchase.ref);
                   purchaseBeingEdited.set(undefined);
+                  deleteUnderConfirmation = undefined;
+                } else {
+                  deleteUnderConfirmation = index;
                 }
-              }}>x</button
+              }}
+              >{#if deleteUnderConfirmation === index}confirm{:else}delete{/if}</button
             ></th
           >
         </tr>
