@@ -110,7 +110,14 @@ test.describe("Editing", () => {
     await expectTheseAtPurchaseIndex(page, ["cool thing", "$10.77", "Gas"], 0);
   });
 
-  // TODO: editing signified
+  test("A purchase being edited is signified", async ({ page }) => {
+    await expect(
+      page.locator("[data-testid=purchase-list-item-0] > .text-left")
+    ).toHaveClass(/under-edit/);
+    await expect(
+      page.locator("[data-testid=purchase-list-item-1] > .text-left")
+    ).not.toHaveClass(/under-edit/);
+  });
 });
 
 test.describe("Deleting", () => {

@@ -116,7 +116,7 @@
           on:click|preventDefault={() => {
             handleReset();
             purchaseBeingEdited.set(undefined);
-          }}>Cancel</button
+          }}>Cancel Edit</button
         >
       {/if}
     </div>

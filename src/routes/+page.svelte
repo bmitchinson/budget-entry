@@ -2,9 +2,9 @@
   import "../global.scss";
 
   import Form from "../components/entry/EntryForm.svelte";
-  import PastPurchases from "../components/purchases/PastPurchases.svelte";
 
   import { debugClick } from "../lib/Debug";
+  import PastPurchasesList from "../components/purchases/PastPurchasesList.svelte";
 </script>
 
 <div class="container-h">
@@ -14,7 +14,7 @@
     <h1 class="emoji" on:click={debugClick} data-testid="money-icon">💸</h1>
     <Form />
     <div class="space" />
-    <PastPurchases />
+    <PastPurchasesList />
   </div>
 </div>
 

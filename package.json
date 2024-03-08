@@ -7,7 +7,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "npm run build && vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "check-watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
     "sync": "cap sync",
@@ -18,6 +18,7 @@
     "test-all-browser": "playwright test --workers=1",
     "test-gui": "playwright test --ui --workers=1",
     "test": "playwright test --project \"Desktop Chrome\" --workers=1",
+    "test-watch": "PWTEST_WATCH=1 npm run test",
     "test-ci": "firebase emulators:exec \"npm run test-all-browser\"",
     "write-tests": "playwright codegen localhost:5173"
   },
