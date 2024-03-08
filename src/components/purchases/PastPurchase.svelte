@@ -1,17 +1,23 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { Database } from "../../lib/Database";
   import type {
     Purchase,
     WithFirebaseDocumentRef,
   } from "../../lib/DatabaseTypes";
   import { purchaseBeingEdited } from "../../lib/Stores";
-  import { createEventDispatcher } from "svelte";
+  import { purchaseAskingToConfirmDelete } from "../../lib/Stores";
 
   export let index: number;
   export let purchase: WithFirebaseDocumentRef<Purchase>;
   export let isUnderEdit: boolean;
 
-  let deleteConfirmationActive = false;
+  let deleteConfirmationActive: boolean;
+
+  $: {
+    deleteConfirmationActive =
+      $purchaseAskingToConfirmDelete?.id === purchase.ref.id;
+  }
 </script>
 
 <tr data-testid="purchase-list-item-{index}">
@@ -40,13 +46,15 @@
       on:click={() => {
         if (deleteConfirmationActive) {
           if (isUnderEdit) purchaseBeingEdited.set(undefined);
-          Database.get()
-            .deletePurchase(purchase.ref)
-            .then(() => {
-              deleteConfirmationActive = false;
-            });
+          purchaseAskingToConfirmDelete.set(undefined);
+          Database.get().deletePurchase(purchase.ref);
         } else {
-          deleteConfirmationActive = true;
+          purchaseAskingToConfirmDelete.set(purchase.ref);
+          console.log(
+            purchase.ref.id +
+              " set conf to " +
+              get(purchaseAskingToConfirmDelete)?.id
+          );
         }
       }}>{deleteConfirmationActive ? "confirm" : "delete"}</button
     ></th

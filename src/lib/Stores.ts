@@ -8,3 +8,7 @@ import { writable, type Writable } from "svelte/store";
 export const purchaseBeingEdited: Writable<
   undefined | WithFirebaseDocumentRef<Purchase>
 > = writable(undefined);
+
+export const purchaseAskingToConfirmDelete: Writable<
+  undefined | FirebaseDocumentRef
+> = writable(undefined);
