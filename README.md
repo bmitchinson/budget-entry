@@ -31,3 +31,7 @@ auto-generated categorization table.
 
 - SPA, no ssr-rendering, all pre-rendered to work with Capacitor
 - Details in +layout.ts
+
+### Revisited 3/8
+
+- Still want to track spending within a paycheck (date range + budget) + categorize + track account + export csv for date range
