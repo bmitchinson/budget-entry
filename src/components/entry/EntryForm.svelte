@@ -4,31 +4,37 @@
   import CategorySelect from "./CategorySelect.svelte";
   import { Database } from "../../lib/Database";
   import { Timestamp } from "firebase/firestore";
-  import { purchaseBeingEdited } from "../../lib/Stores";
+  import {
+    purchaseAskingToConfirmDelete,
+    purchaseBeingEdited,
+  } from "../../lib/Stores";
   import type { Purchase } from "../../lib/DatabaseTypes";
+  import {
+    datetimeToTimestamp,
+    initialDatetimeString,
+    timestampToDatetimeString,
+  } from "../../lib/utils/DateUtils";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
   });
 
-  const today = new Date();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-  const selectedDate = `${today.getFullYear()}-${month}-${day}`;
+  console.log("Initial Datetime String from app: ", initialDatetimeString);
 
   const { form, handleChange, handleSubmit, handleReset } = createForm({
     initialValues: {
       amount: "",
       category: "",
-      date: selectedDate,
+      purchaseDatetime: initialDatetimeString,
       description: "",
     },
     onSubmit: (formData) => {
       const entryTime = Timestamp.fromDate(new Date());
       const purchase: Purchase = {
         ...formData,
+        purchaseDatetime: datetimeToTimestamp(formData.purchaseDatetime),
         amount: parseFloat(formData.amount) || 0,
-        entryTime,
+        entryDatetime: entryTime,
       };
       if ($purchaseBeingEdited) {
         Database.get()
@@ -52,10 +58,16 @@
       form.set({
         amount: purchase.amount.toString(),
         category: purchase.category,
-        date: purchase.date,
+        purchaseDatetime: timestampToDatetimeString(purchase.purchaseDatetime),
         description: purchase.description,
       });
     } else {
+      handleReset();
+    }
+  });
+
+  purchaseAskingToConfirmDelete.subscribe((purchaseRef) => {
+    if (purchaseRef == undefined) {
       handleReset();
     }
   });
@@ -95,14 +107,14 @@
     </div>
 
     <div class="row-item space-between">
-      <label for="date">Date</label>
+      <label for="datetime">Date/Time</label>
       <input
-        id="date"
-        name="date"
-        type="date"
-        data-testid="date-input"
+        id="datetime"
+        name="datetime"
+        type="datetime-local"
+        data-testid="datetime-input"
         on:change={handleChange}
-        bind:value={$form.date}
+        bind:value={$form.purchaseDatetime}
       />
     </div>
 

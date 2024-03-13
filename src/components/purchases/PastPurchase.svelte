@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { get } from "svelte/store";
   import { Database } from "../../lib/Database";
   import type {
     Purchase,
@@ -50,11 +49,6 @@
           Database.get().deletePurchase(purchase.ref);
         } else {
           purchaseAskingToConfirmDelete.set(purchase.ref);
-          console.log(
-            purchase.ref.id +
-              " set conf to " +
-              get(purchaseAskingToConfirmDelete)?.id
-          );
         }
       }}>{deleteConfirmationActive ? "confirm" : "delete"}</button
     ></th

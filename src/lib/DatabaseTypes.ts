@@ -15,12 +15,9 @@ export type FirebaseDocumentRef = DocumentReference;
 export interface Purchase {
   amount: number;
   category: string;
-  // TODO:
-  // refactor: purchaseDateTime
-  date: string;
+  purchaseDatetime: Timestamp;
   description: string;
-  // refactor: entryDateTime
-  entryTime: Timestamp;
+  entryDatetime: Timestamp;
 }
 
 export type WithFirebaseDocumentRef<T> = T & { ref: FirebaseDocumentRef };

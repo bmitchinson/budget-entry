@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { get } from "svelte/store";
   import { Database } from "../../lib/Database";
   import { purchaseBeingEdited } from "../../lib/Stores";
   import PastPurchase from "./PastPurchase.svelte";

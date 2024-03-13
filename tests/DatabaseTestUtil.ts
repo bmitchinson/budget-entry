@@ -3,29 +3,30 @@
 import { Timestamp } from "firebase/firestore";
 import type { Purchase } from "../src/lib/DatabaseTypes";
 import { Database } from "../src/lib/Database";
-import { add } from "date-fns";
+import { add, sub } from "date-fns";
+import { mockedClockDate } from "./CommonTestOperations";
 
 const fakePurchases: Purchase[] = [
   {
     amount: 123.45,
     category: "Gas",
-    date: "2021-01-01",
-    description: "Item One",
-    entryTime: Timestamp.fromDate(new Date()),
+    purchaseDatetime: Timestamp.fromDate(sub(mockedClockDate, { minutes: 3 })),
+    description: "Morning Drive",
+    entryDatetime: Timestamp.fromDate(new Date()),
   },
   {
     amount: 456.12,
     category: "Restaurants",
-    date: "2021-01-02",
-    description: "Item Two",
-    entryTime: Timestamp.fromDate(add(new Date(), { seconds: 10 })),
+    purchaseDatetime: Timestamp.fromDate(sub(mockedClockDate, { minutes: 2 })),
+    description: "Lunch",
+    entryDatetime: Timestamp.fromDate(new Date()),
   },
   {
     amount: 100,
     category: "Date Night",
-    date: "2021-01-03",
-    description: "Item Three",
-    entryTime: Timestamp.fromDate(add(new Date(), { seconds: 20 })),
+    purchaseDatetime: Timestamp.fromDate(sub(mockedClockDate, { minutes: 1 })),
+    description: "Centro",
+    entryDatetime: Timestamp.fromDate(new Date()),
   },
 ];
 

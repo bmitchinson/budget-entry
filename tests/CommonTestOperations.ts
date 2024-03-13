@@ -1,12 +1,21 @@
 import { expect, type Page } from "@playwright/test";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
+
+export const mockedClockDatetimeString = "2023-05-12T01:30";
+
+export const mockedClockDate = parse(
+  mockedClockDatetimeString,
+  "yyyy-MM-dd'T'HH:mm",
+  new Date()
+);
 
 export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Amount").fill("10.77");
-  await page.getByLabel("Description").fill("cool thing");
+  await page.getByLabel("Description").fill("cool trip");
+  await page.locator("#category-input").press("Delete");
   await page.locator("#category-input").fill("Gas");
   await page.locator(".sv-item").first().click();
-  await page.getByLabel("Date").fill("2023-09-21");
+  await page.getByLabel("Date/Time").fill(mockedClockDatetimeString);
 };
 
 export const clickEditAtPurchaseIndex = async (page: Page, index: number) => {
@@ -26,12 +35,12 @@ export const clickDeletePurchaseAtIndex = async (page: Page, index: number) => {
 };
 
 export const expectFormToBeEmpty = async (page: Page) => {
-  const today = format(new Date(), "yyyy-MM-dd");
-
   await expect(await amountOnForm(page)).toBe("");
   await expect(await descriptionOnForm(page)).toBe("");
   await expect(await categoryOnForm(page)).toBe("");
-  await expect(await dateOnForm(page)).toBe(today);
+  await expect(page.getByTestId("datetime-input")).toHaveValue(
+    new RegExp(mockedClockDatetimeString)
+  );
 };
 
 export const purchasesOnPage = async (page: Page) => {
@@ -52,9 +61,6 @@ export const categoryOnForm = async (page: Page) => {
     return "";
   }
 };
-
-export const dateOnForm = async (page: Page) =>
-  await page.getByTestId("date-input").inputValue();
 
 export const expectTheseAtPurchaseIndex = async (
   page: Page,

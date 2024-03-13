@@ -14,6 +14,7 @@
     "ios": "npm run build && npm run sync && npm run xcode",
     "xcode": "cap open ios",
     "firebase": "firebase emulators:start --import ./firestore-emulator-data",
+    "firebase-export": "firebase emulators:export ./firestore-emulator-data",
     "report": "playwright show-report",
     "test-all-browser": "playwright test --workers=1",
     "test-gui": "playwright test --ui --workers=1",
