@@ -95,6 +95,9 @@ test.describe("Adding", () => {
     await expect(page.getByTestId("purchase-list-item-0")).toContainText("Gas");
   });
 
+  // TODO done but needs test
+  // test("Adding a purchase÷ resets date/time to current time");
+
   // todo-postshadcn: validation for each field (right now you can just do category)
 });
 
@@ -216,7 +219,8 @@ test("Tests running in playwright use fake database", async ({ page }) => {
 
 // test.describe("Reset", async ({ page }) => {
 // todo: reset should populate to an updated time, not the time when the page was loaded
-// ^ will need a way to advance time a minute
+// done but needs test.
+// need a way to advance time a minute
 // });
 
 // todo: enable some of these tests to run in offline mode
@@ -227,3 +231,9 @@ test("Tests running in playwright use fake database", async ({ page }) => {
 // https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
 
 // todo: firebase rules to require login?
+
+// todo: Clicking anywhere else on the page clears the purchase delete confirmation
+
+// idea: sort toggle (sort purchases by entry date or purchase date)
+
+// idea: dark theme

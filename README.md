@@ -35,3 +35,9 @@ auto-generated categorization table.
 ### Revisited 3/8
 
 - Still want to track spending within a paycheck (date range + budget) + categorize + track account + export csv for date range
+
+### Next Up
+
+- Need tests that can advance the mock time to test reset / submit sets time to
+  current.
+- Need shadcn before adding more features

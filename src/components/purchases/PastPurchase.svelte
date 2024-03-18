@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { format } from "date-fns";
   import { Database } from "../../lib/Database";
   import type {
     Purchase,
@@ -11,6 +12,8 @@
   export let purchase: WithFirebaseDocumentRef<Purchase>;
   export let isUnderEdit: boolean;
 
+  const dateDisplayFormat = "M/d - h:mmaaaaa";
+
   let deleteConfirmationActive: boolean;
 
   $: {
@@ -20,6 +23,9 @@
 </script>
 
 <tr data-testid="purchase-list-item-{index}">
+  <th class="text-center" class:under-edit={isUnderEdit}
+    >{format(purchase.purchaseDatetime.toDate(), dateDisplayFormat)}</th
+  >
   <th class="text-left" class:under-edit={isUnderEdit}
     >{purchase.description}</th
   >
@@ -34,7 +40,7 @@
       data-testid="edit-{index}"
       on:click={() => {
         purchaseBeingEdited.set(purchase);
-      }}>{isUnderEdit ? "editing" : "edit"}</button
+      }}>📝</button
     ></th
   >
   <th
@@ -50,7 +56,7 @@
         } else {
           purchaseAskingToConfirmDelete.set(purchase.ref);
         }
-      }}>{deleteConfirmationActive ? "confirm" : "delete"}</button
+      }}>{deleteConfirmationActive ? "✅" : "🗑️"}</button
     ></th
   >
 </tr>
@@ -80,6 +86,6 @@
   th {
     border: 1px solid #dddddd;
     padding: 0.5em;
-    width: 5em;
+    // width: 5em;
   }
 </style>

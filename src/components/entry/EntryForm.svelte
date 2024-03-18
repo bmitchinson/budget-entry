@@ -19,15 +19,17 @@
     isActive && document.getElementById("amount")?.focus();
   });
 
-  console.log("Initial Datetime String from app: ", initialDatetimeString);
+  const initialFormValues = () => ({
+    amount: "",
+    category: "",
+    purchaseDatetime: initialDatetimeString(),
+    description: "",
+  });
 
-  const { form, handleChange, handleSubmit, handleReset } = createForm({
-    initialValues: {
-      amount: "",
-      category: "",
-      purchaseDatetime: initialDatetimeString,
-      description: "",
-    },
+  const resetForm = () => form.set(initialFormValues());
+
+  const { form, handleChange, handleSubmit } = createForm({
+    initialValues: initialFormValues(),
     onSubmit: (formData) => {
       const entryTime = Timestamp.fromDate(new Date());
       const purchase: Purchase = {
@@ -41,13 +43,13 @@
           .updatePurchase($purchaseBeingEdited.ref, purchase)
           .then(() => {
             purchaseBeingEdited.set(undefined);
-            handleReset();
+            resetForm();
           });
       } else {
         Database.get()
           .addPurchase(purchase)
           .then(() => {
-            handleReset();
+            resetForm();
           });
       }
     },
@@ -62,13 +64,13 @@
         description: purchase.description,
       });
     } else {
-      handleReset();
+      resetForm();
     }
   });
 
   purchaseAskingToConfirmDelete.subscribe((purchaseRef) => {
     if (purchaseRef == undefined) {
-      handleReset();
+      resetForm();
     }
   });
 </script>
@@ -121,12 +123,12 @@
     <div class="row-item center">
       {#if !$purchaseBeingEdited}
         <button type="submit">Submit</button>
-        <button on:click|preventDefault={handleReset}>Reset</button>
+        <button on:click|preventDefault={resetForm}>Reset</button>
       {:else}
         <button type="submit">Save Edit</button>
         <button
           on:click|preventDefault={() => {
-            handleReset();
+            resetForm();
             purchaseBeingEdited.set(undefined);
           }}>Cancel Edit</button
         >
