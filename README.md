@@ -38,6 +38,5 @@ auto-generated categorization table.
 
 ### Next Up
 
-- Need tests that can advance the mock time to test reset / submit sets time to
-  current.
+- Blog post about time mock
 - Need shadcn before adding more features

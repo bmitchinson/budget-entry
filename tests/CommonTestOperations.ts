@@ -1,13 +1,18 @@
 import { expect, type Page } from "@playwright/test";
 import { format, parse } from "date-fns";
 
+const formatOfDatetimeFieldValue = "yyyy-MM-dd'T'HH:mm";
+
 export const mockedClockDatetimeString = "2023-05-12T01:30";
 
 export const mockedClockDate = parse(
   mockedClockDatetimeString,
-  "yyyy-MM-dd'T'HH:mm",
+  formatOfDatetimeFieldValue,
   new Date()
 );
+
+export const dateToDatetimeFieldValue = (date: Date) =>
+  format(date, formatOfDatetimeFieldValue);
 
 export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Amount").fill("10.77");
@@ -61,6 +66,11 @@ export const categoryOnForm = async (page: Page) => {
     return "";
   }
 };
+
+export const advanceTimeOneMinute = async (page: Page) =>
+  await page.evaluate(() => {
+    (window as any).advanceTimeOneMinute();
+  });
 
 export const expectTheseAtPurchaseIndex = async (
   page: Page,

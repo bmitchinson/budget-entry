@@ -14,8 +14,10 @@ import {
   expectTheseAtPurchaseIndex,
   mockedClockDate,
   mockedClockDatetimeString,
+  advanceTimeOneMinute,
+  dateToDatetimeFieldValue,
 } from "./CommonTestOperations";
-import { format } from "date-fns";
+import { add, format } from "date-fns";
 
 // TODO: Use shadcn/ui
 
@@ -25,17 +27,21 @@ test.beforeEach(async ({ page }) => {
 
   // Update the Date accordingly in your test pages
   await page.addInitScript(`{
-  // Extend Date constructor to default to fakeNow
-  Date = class extends Date {
-    constructor(...args) {
-      (args.length === 0) ? super(${fakeNow}) : super(...args)
-    }
+  window.__minutesPassed = 0;
+
+  window.advanceTimeOneMinute = () => {
+    console.log("TIME ADVANCING TO " + ++window.__minutesPassed + " MINUTE(S) PASSED.");
   }
 
-  // Override Date.now() to start from fakeNow
-  const __DateNowOffset = ${fakeNow} - Date.now();
-  const __DateNow = Date.now;
-  Date.now = () => __DateNow() + __DateNowOffset;
+  Date.now = () => {
+    return ${fakeNow} + window.__minutesPassed * 60000;
+  }
+  
+  Date = class extends Date {
+    constructor(...args) {
+      (args.length === 0) ? super(${fakeNow} + window.__minutesPassed * 60000) : super(...args)
+    }
+  }
 }`);
 
   await clearFirebaseData().then(createFakePurchases);
@@ -77,13 +83,25 @@ test.describe("Entry form", () => {
 
   // todo-postshadcn: add clear button to form
 
-  test("Defaults to the current datetime", async ({ page }) => {});
+  test("Defaults to the current datetime", async ({ page }) => {
+    await advanceTimeOneMinute(page);
+    await advanceTimeOneMinute(page);
+    await page.getByText("Submit").click();
+
+    const expectedTime = add(mockedClockDate, { minutes: 2 });
+    await expect(page.getByTestId("datetime-input")).toHaveValue(
+      new RegExp(dateToDatetimeFieldValue(expectedTime))
+    );
+  });
 });
 
 test.describe("Adding", () => {
-  test("Adding a purchase saves it to the database", async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await clearFirebaseData().then(() => page.goto("/"));
     await fillPurchaseFormWithValidData(page);
+  });
+
+  test("Adding a purchase saves it to the database", async ({ page }) => {
     await page.getByText("Submit").click();
 
     await expect(page.getByTestId("purchase-list-item-0")).toContainText(
@@ -95,8 +113,18 @@ test.describe("Adding", () => {
     await expect(page.getByTestId("purchase-list-item-0")).toContainText("Gas");
   });
 
-  // TODO done but needs test
-  // test("Adding a purchase÷ resets date/time to current time");
+  test("Adding a purchase resets date/time to current time", async ({
+    page,
+  }) => {
+    await advanceTimeOneMinute(page);
+    await advanceTimeOneMinute(page);
+    await page.getByText("Submit").click();
+
+    const expectedTime = add(mockedClockDate, { minutes: 2 });
+    await expect(page.getByTestId("datetime-input")).toHaveValue(
+      new RegExp(dateToDatetimeFieldValue(expectedTime))
+    );
+  });
 
   // todo-postshadcn: validation for each field (right now you can just do category)
 });
@@ -217,11 +245,19 @@ test("Tests running in playwright use fake database", async ({ page }) => {
   });
 });
 
-// test.describe("Reset", async ({ page }) => {
-// todo: reset should populate to an updated time, not the time when the page was loaded
-// done but needs test.
-// need a way to advance time a minute
-// });
+test.describe("Reset", () => {
+  test("Reseting updates time in date/time entry", async ({ page }) => {
+    await advanceTimeOneMinute(page);
+    await advanceTimeOneMinute(page);
+
+    await page.getByText("Reset").click();
+
+    const expectedTime = add(mockedClockDate, { minutes: 2 });
+    await expect(page.getByTestId("datetime-input")).toHaveValue(
+      new RegExp(dateToDatetimeFieldValue(expectedTime))
+    );
+  });
+});
 
 // todo: enable some of these tests to run in offline mode
 //     as well?
