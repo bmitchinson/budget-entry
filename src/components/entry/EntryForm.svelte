@@ -14,6 +14,7 @@
     initialDatetimeString,
     timestampToDatetimeString,
   } from "$lib/utils/DateUtils";
+  import Button from "../ui/button/button.svelte";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();
@@ -122,15 +123,21 @@
 
     <div class="row-item center">
       {#if !$purchaseBeingEdited}
-        <button type="submit">Submit</button>
-        <button on:click|preventDefault={resetForm}>Reset</button>
+        <Button type="submit">Submit</Button>
+        <Button
+          on:click={(event) => {
+            event.stopPropagation();
+            resetForm();
+          }}>Reset</Button
+        >
       {:else}
-        <button type="submit">Save Edit</button>
-        <button
-          on:click|preventDefault={() => {
+        <Button type="submit">Save Edit</Button>
+        <Button
+          on:click={(event) => {
+            event.stopPropagation();
             resetForm();
             purchaseBeingEdited.set(undefined);
-          }}>Cancel Edit</button
+          }}>Cancel Edit</Button
         >
       {/if}
     </div>
@@ -141,8 +148,8 @@
   .entry-form {
     font-size: 1.3rem;
   }
-  button {
+  /* button {
     padding: 1em 2em;
     -webkit-appearance: none;
-  }
+  } */
 </style>

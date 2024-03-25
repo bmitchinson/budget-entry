@@ -1,10 +1,10 @@
 <script lang="ts">
-  import "../global.css";
+  import "../global.pcss";
 
-  import Form from "../components/entry/EntryForm.svelte";
+  import Form from "$components/entry/EntryForm.svelte";
 
   import { debugClick } from "$lib/Debug";
-  import PastPurchasesList from "../components/purchases/PastPurchasesList.svelte";
+  import PastPurchasesList from "$components/purchases/PastPurchasesList.svelte";
 </script>
 
 <div class="container-h">

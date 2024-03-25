@@ -52,8 +52,12 @@
     "@capacitor/core": "^5.0.5",
     "@capacitor/ios": "^5.0.5",
     "@svelte-put/clickoutside": "^3.0.1",
+    "bits-ui": "^0.20.1",
+    "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "firebase": "^10.1.0",
-    "svelecte": "^3.17.2"
+    "svelecte": "^3.17.2",
+    "tailwind-merge": "^2.2.2",
+    "tailwind-variants": "^0.2.1"
   }
 }
