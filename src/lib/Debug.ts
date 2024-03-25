@@ -1,5 +1,5 @@
 import { Capacitor } from "@capacitor/core";
-import { purchaseBeingEdited } from "../lib/Stores";
+import { purchaseBeingEdited } from "$lib/Stores";
 import { get } from "svelte/store";
 import { Database } from "./Database";
 import { logInfo } from "./Logging";

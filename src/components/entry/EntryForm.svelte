@@ -2,18 +2,18 @@
   import { createForm } from "svelte-forms-lib";
   import { App } from "@capacitor/app";
   import CategorySelect from "./CategorySelect.svelte";
-  import { Database } from "../../lib/Database";
+  import { Database } from "$lib/Database";
   import { Timestamp } from "firebase/firestore";
   import {
     purchaseAskingToConfirmDelete,
     purchaseBeingEdited,
-  } from "../../lib/Stores";
-  import type { Purchase } from "../../lib/DatabaseTypes";
+  } from "$lib/Stores";
+  import type { Purchase } from "$lib/DatabaseTypes";
   import {
     datetimeToTimestamp,
     initialDatetimeString,
     timestampToDatetimeString,
-  } from "../../lib/utils/DateUtils";
+  } from "$lib/utils/DateUtils";
 
   App.addListener("appStateChange", ({ isActive }) => {
     isActive && document.getElementById("amount")?.focus();

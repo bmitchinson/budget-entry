@@ -3,7 +3,7 @@
 
   import Form from "../components/entry/EntryForm.svelte";
 
-  import { debugClick } from "../lib/Debug";
+  import { debugClick } from "$lib/Debug";
   import PastPurchasesList from "../components/purchases/PastPurchasesList.svelte";
 </script>
 

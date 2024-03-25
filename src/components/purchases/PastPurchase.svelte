@@ -1,13 +1,10 @@
 <script lang="ts">
   import { format } from "date-fns";
-  import { Database } from "../../lib/Database";
+  import { Database } from "$lib/Database";
   import { clickoutside } from "@svelte-put/clickoutside";
-  import type {
-    Purchase,
-    WithFirebaseDocumentRef,
-  } from "../../lib/DatabaseTypes";
-  import { purchaseBeingEdited } from "../../lib/Stores";
-  import { purchaseAskingToConfirmDelete } from "../../lib/Stores";
+  import type { Purchase, WithFirebaseDocumentRef } from "$lib/DatabaseTypes";
+  import { purchaseBeingEdited } from "$lib/Stores";
+  import { purchaseAskingToConfirmDelete } from "$lib/Stores";
 
   export let index: number;
   export let purchase: WithFirebaseDocumentRef<Purchase>;
