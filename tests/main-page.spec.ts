@@ -201,6 +201,15 @@ test.describe("Deleting", () => {
     await clickDeletePurchaseAtIndex(page, 0);
     await expect(await purchasesOnPage(page)).toBe(3);
   });
+  test("Clicking elsewhere after one delete click removes the confirmation prompt", async ({
+    page,
+  }) => {
+    await clickDeletePurchaseAtIndex(page, 0);
+    await page.getByTestId("money-icon").click();
+
+    await expect(page.getByTestId("delete-item-0")).toContainText("🗑️");
+    await expect(page.getByTestId("delete-item-0")).not.toHaveText("✅");
+  });
   test("Deleting clears any purchase from being under edit", async ({
     page,
   }) => {
@@ -267,8 +276,6 @@ test.describe("Reset", () => {
 // https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
 
 // todo: firebase rules to require login?
-
-// todo: Clicking anywhere else on the page clears the purchase delete confirmation
 
 // idea: sort toggle (sort purchases by entry date or purchase date)
 

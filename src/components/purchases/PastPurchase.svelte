@@ -1,6 +1,7 @@
 <script lang="ts">
   import { format } from "date-fns";
   import { Database } from "../../lib/Database";
+  import { clickoutside } from "@svelte-put/clickoutside";
   import type {
     Purchase,
     WithFirebaseDocumentRef,
@@ -20,6 +21,10 @@
     deleteConfirmationActive =
       $purchaseAskingToConfirmDelete?.id === purchase.ref.id;
   }
+
+  const cancelDeleteConfirmation = () => {
+    deleteConfirmationActive && purchaseAskingToConfirmDelete.set(undefined);
+  };
 </script>
 
 <tr data-testid="purchase-list-item-{index}">
@@ -47,6 +52,8 @@
     class="text-center button-cell"
     data-testid="delete-item-{index}"
     class:under-edit={isUnderEdit}
+    use:clickoutside
+    on:clickoutside={cancelDeleteConfirmation}
     ><button
       on:click={() => {
         if (deleteConfirmationActive) {
