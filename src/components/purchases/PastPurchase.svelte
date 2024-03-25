@@ -68,7 +68,7 @@
   >
 </tr>
 
-<style lang="scss">
+<style>
   .text-left {
     text-align: left;
   }
@@ -93,6 +93,6 @@
   th {
     border: 1px solid #dddddd;
     padding: 0.5em;
-    // width: 5em;
+    /* width: 5em; */
   }
 </style>

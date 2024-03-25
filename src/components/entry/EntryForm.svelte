@@ -137,7 +137,7 @@
   </form>
 </div>
 
-<style lang="scss">
+<style>
   .entry-form {
     font-size: 1.3rem;
   }

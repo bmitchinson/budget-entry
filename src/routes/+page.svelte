@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../global.scss";
+  import "../global.css";
 
   import Form from "../components/entry/EntryForm.svelte";
 
@@ -18,7 +18,7 @@
   </div>
 </div>
 
-<style lang="scss">
+<style>
   .container-h {
     width: 100vw;
     padding-top: 5em;

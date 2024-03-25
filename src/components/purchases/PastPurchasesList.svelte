@@ -25,7 +25,7 @@
   {/if}
 </div>
 
-<style lang="scss">
+<style>
   .purchase-list {
     height: 11.5em;
     overflow: auto;
