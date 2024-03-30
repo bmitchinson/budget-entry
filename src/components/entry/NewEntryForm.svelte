@@ -28,7 +28,12 @@
           entryDatetime: entryTime,
         };
         if ($purchaseBeingEdited) {
-          // shade-todo: edit flow
+          Database.get()
+            .updatePurchase($purchaseBeingEdited.ref, purchase)
+            .then(() => {
+              purchaseBeingEdited.set(undefined);
+              resetForm();
+            });
         } else {
           Database.get().addPurchase(purchase).then(resetForm);
         }
@@ -39,6 +44,15 @@
   const { form: formData, enhance } = form;
 
   const resetForm = () => ($formData = initialFormValues());
+
+  purchaseBeingEdited.subscribe((purchase) => {
+    if (purchase) {
+      // note: reassigning formData completely broke. why?
+      $formData.amount = purchase.amount;
+    } else {
+      resetForm();
+    }
+  });
 
   const inputEventToFloat = (e: FormInputEvent<InputEvent>) => {
     const { value } = e?.target as HTMLInputElement;
