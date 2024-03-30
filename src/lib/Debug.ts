@@ -2,7 +2,7 @@ import { Capacitor } from "@capacitor/core";
 import { purchaseBeingEdited } from "$lib/Stores";
 import { get } from "svelte/store";
 import { Database } from "./Database";
-import { logInfo } from "./Logging";
+import { logDebug, logInfo } from "./Logging";
 
 (window as any).toggleTestDB = () => {
   if (localStorage.getItem("useFBEmulator") == "true") {
@@ -32,7 +32,7 @@ const showBuiltDebugMsg = (info: any) => {
   if (Capacitor.isNativePlatform()) {
     alert(JSON.stringify(info));
   } else {
-    console.log("⚙️ DEBUG INFO:", info);
+    logDebug("DEBUG INFO:", info);
   }
 };
 
