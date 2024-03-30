@@ -45,26 +45,27 @@
 <form method="POST" use:enhance>
   <Form.Field {form} name="amount">
     <Form.Control let:attrs>
-      <div class="flex items-center space-x-2">
-        <Form.Label>Amount</Form.Label>
-        <div>
-          <div style="max-width: 13em;">
-            <Input
-              on:input={inputEventToFloat}
-              class=""
-              value={$formData.amount}
-              type="number"
-              step=".01"
-              inputmode="decimal"
-              data-testid="amount-input"
-              {...attrs}
-            />
-            <Form.FieldErrors />
+      <div class="flex flex-col items-center space-y-2">
+        <div class="flex items-center space-x-2">
+          <Form.Label>Amount</Form.Label>
+          <div>
+            <div style="max-width: 13em;">
+              <Input
+                on:input={inputEventToFloat}
+                class=""
+                value={$formData.amount}
+                type="number"
+                step=".01"
+                inputmode="decimal"
+                data-testid="amount-input"
+                {...attrs}
+              />
+            </div>
           </div>
-          <!-- shade-todo: format errors to not stretch box (ex: negative #) -->
         </div>
-      </div></Form.Control
-    >
+        <Form.FieldErrors />
+      </div>
+    </Form.Control>
   </Form.Field>
 
   <!-- https://www.shadcn-svelte.com/docs/components/date-picker#date-picker -->
@@ -85,8 +86,14 @@
     <Form.FieldErrors />
   </Form.Field> -->
 
-  <div class="flex justify-center space-x-4">
+  <div id="form-buttons" class="flex justify-center space-x-4">
     <Form.Button type="submit">Submit</Form.Button>
     <Form.Button type="button" on:click={resetForm}>Reset</Form.Button>
   </div>
 </form>
+
+<style>
+  #form-buttons {
+    margin-top: 1em;
+  }
+</style>

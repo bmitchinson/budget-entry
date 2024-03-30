@@ -41,6 +41,6 @@
     cursor: default;
     user-select: none;
     scale: 3;
-    margin-bottom: 1.5em;
+    margin-bottom: 2em;
   }
 </style>
