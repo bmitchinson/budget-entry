@@ -5,32 +5,45 @@
   import * as Form from "$components/ui/form";
   import Input from "$components/ui/input/input.svelte";
   import type { FormInputEvent } from "$components/ui/input";
+  import { purchaseBeingEdited } from "../../lib/Stores";
+  import { Database } from "../../lib/Database";
+  import type { Purchase } from "../../lib/DatabaseTypes";
+  import { Timestamp } from "firebase/firestore";
 
   export let superValidatedForm: SuperValidated<FormSchema>;
 
+  // https://superforms.rocks/concepts/events
   const form = superForm(superValidatedForm, {
     SPA: true,
     validators: zod(formSchema),
-    // https://superforms.rocks/concepts/events#onresult
     onUpdate({ form }) {
       if (form.valid) {
-        console.log("Valid Data! ", form.data);
+        const entryTime = Timestamp.fromDate(new Date());
+        const purchase: Purchase = {
+          amount: form.data.amount,
+          // shade-todo: form > hardcoded
+          category: "hardcoded",
+          purchaseDatetime: Timestamp.fromDate(new Date()),
+          description: "hardcoded",
+          entryDatetime: entryTime,
+        };
+        if ($purchaseBeingEdited) {
+          // shade-todo: edit flow
+        } else {
+          Database.get().addPurchase(purchase).then(resetForm);
+        }
       }
     },
   });
 
   const { form: formData, enhance } = form;
 
-  formData.subscribe((data) => {
-    console.log("Data subscription:", data);
-  });
+  const resetForm = () => ($formData = initialFormValues());
 
   const inputEventToFloat = (e: FormInputEvent<InputEvent>) => {
     const { value } = e?.target as HTMLInputElement;
     $formData.amount = parseFloat(value) || 0;
   };
-
-  const resetForm = () => ($formData = initialFormValues());
 </script>
 
 <!-- shade-todo: clicking edit and then white space didn't disengage edit? -->
