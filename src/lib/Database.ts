@@ -29,7 +29,7 @@ import type {
 import { get, writable, type Writable } from "svelte/store";
 import { logInfo } from "./Logging";
 
-// refactor: after new collections are added this will be huge.
+// smell: after new collections are added this will be huge.
 // How can I split up collections into their own respective classes?
 // generic operations?
 
@@ -136,7 +136,6 @@ export class Database {
   }
 
   private initializePurchasesSubscription() {
-    // todo-postshadcn: get all within timespan from UI, instead of limiting to 15
     const q = query(
       collection(this.db, "purchases"),
       orderBy("purchaseDatetime", "desc"),

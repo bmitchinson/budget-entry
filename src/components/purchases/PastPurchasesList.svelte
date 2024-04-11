@@ -7,6 +7,7 @@
   const purchases = Database.get().getPurchasesStore();
 </script>
 
+<!-- todo: not sure if query or here but, order not clear anymore. should be purchaseTime order. -->
 <div class={"center purchase-list"}>
   {#if $purchases.data && !$purchases.error}
     <table>

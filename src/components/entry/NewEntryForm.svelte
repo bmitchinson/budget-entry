@@ -21,10 +21,9 @@
         const entryTime = Timestamp.fromDate(new Date());
         const purchase: Purchase = {
           amount: form.data.amount,
-          // shade-todo: form > hardcoded
           category: "hardcoded",
           purchaseDatetime: Timestamp.fromDate(new Date()),
-          description: "hardcoded",
+          description: form.data.description,
           entryDatetime: entryTime,
         };
         if ($purchaseBeingEdited) {
@@ -47,8 +46,8 @@
 
   purchaseBeingEdited.subscribe((purchase) => {
     if (purchase) {
-      // note: reassigning formData completely broke. why?
       $formData.amount = purchase.amount;
+      $formData.description = purchase.description;
     } else {
       resetForm();
     }
@@ -60,17 +59,17 @@
   };
 </script>
 
-<!-- shade-test: negative amount turns amount red -->
+<!-- todo: new-shade-test: negative amount turns amount red -->
 
-<!-- shade-test: negative amount won't create new purchase -->
+<!-- todo: new-shade-test: negative amount won't create new purchase -->
 
-<!-- shade-test: negative amount won't edit -->
+<!-- todo: new-shade-test: negative amount won't edit -->
 
 <!-- https://github.com/huntabyte/shadcn-svelte/blob/main/apps/www/src/routes/(app)/examples/forms/account/account-form.svelte#L109 -->
 <form method="POST" use:enhance>
   <Form.Field {form} name="amount">
     <Form.Control let:attrs>
-      <div class="flex flex-col items-center space-y-2">
+      <div class="flex flex-col items-end space-y-2">
         <div class="flex items-center space-x-2">
           <Form.Label>Amount</Form.Label>
           <div>
@@ -78,7 +77,7 @@
               <Input
                 on:input={inputEventToFloat}
                 class=""
-                value={$formData.amount}
+                bind:value={$formData.amount}
                 type="number"
                 step=".01"
                 inputmode="decimal"
@@ -90,6 +89,28 @@
         </div>
         <Form.FieldErrors />
       </div>
+    </Form.Control>
+  </Form.Field>
+  <Form.Field {form} name="description">
+    <Form.Control let:attrs>
+      <div class="flex flex-col items-end space-y-2">
+        <div class="flex items-center space-x-2">
+          <Form.Label>Description</Form.Label>
+          <div>
+            <div style="max-width: 13em;">
+              <Input
+                class=""
+                bind:value={$formData.description}
+                type="text"
+                inputmode="text"
+                data-testid="description-input"
+                {...attrs}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Form.FieldErrors />
     </Form.Control>
   </Form.Field>
 

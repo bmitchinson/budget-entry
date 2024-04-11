@@ -24,6 +24,8 @@
   };
 </script>
 
+<!-- feature: date range to query, impacts "initializePurchasesSubscription" -->
+
 <tr data-testid="purchase-list-item-{index}">
   <th class="text-center" class:under-edit={isUnderEdit}
     >{format(purchase.purchaseDatetime.toDate(), dateDisplayFormat)}</th

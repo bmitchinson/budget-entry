@@ -19,8 +19,6 @@ import {
 } from "./CommonTestOperations";
 import { add, format } from "date-fns";
 
-// TODO: Use shadcn/ui
-
 test.beforeEach(async ({ page }) => {
   // https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
   const fakeNow = mockedClockDate.valueOf();
@@ -81,8 +79,6 @@ test.describe("Entry form", () => {
     );
   });
 
-  // todo-postshadcn: add clear button to form
-
   test("Defaults to the current datetime", async ({ page }) => {
     await advanceTimeOneMinute(page);
     await advanceTimeOneMinute(page);
@@ -126,7 +122,7 @@ test.describe("Adding", () => {
     );
   });
 
-  // todo-postshadcn: validation for each field (right now you can just do category)
+  // feature: validation for each field (right now you can just do category)
 });
 
 test.describe("Editing", () => {
@@ -268,15 +264,16 @@ test.describe("Reset", () => {
   });
 });
 
-// todo: enable some of these tests to run in offline mode
-//     as well?
+// enable some of these tests to run in offline mode?
 // - add purchase, block FB, add 2nd purchase, refresh page (FB Still blocked), are both purchases there?
 //    - same but with delete as the operation instead of add
 // - ^ that was the core of why I wanted to use firebase so .... hope those work?
 // https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
 
-// todo: firebase rules to require login?
+// feature: firebase rules to require login?
+// feature: ditch firebase and use verdant?
+// https://github.com/a-type/verdant
 
-// idea: sort toggle (sort purchases by entry date or purchase date)
+// feature: sort toggle (sort purchases by entry date or purchase date)
 
 // idea: dark theme
