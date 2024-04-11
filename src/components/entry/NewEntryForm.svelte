@@ -60,8 +60,6 @@
   };
 </script>
 
-<!-- shade-todo: clicking edit and then white space didn't disengage edit? -->
-
 <!-- shade-test: negative amount turns amount red -->
 
 <!-- shade-test: negative amount won't create new purchase -->
@@ -114,8 +112,20 @@
   </Form.Field> -->
 
   <div id="form-buttons" class="flex justify-center space-x-4">
-    <Form.Button type="submit">Submit</Form.Button>
-    <Form.Button type="button" on:click={resetForm}>Reset</Form.Button>
+    {#if $purchaseBeingEdited}
+      <Form.Button type="submit">Save Edit</Form.Button>
+      <Form.Button
+        type="button"
+        on:click={(event) => {
+          event.stopPropagation();
+          resetForm();
+          purchaseBeingEdited.set(undefined);
+        }}>Cancel Edit</Form.Button
+      >
+    {:else}
+      <Form.Button type="submit">Submit</Form.Button>
+      <Form.Button type="button" on:click={resetForm}>Reset</Form.Button>
+    {/if}
   </div>
 </form>
 
