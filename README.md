@@ -9,21 +9,25 @@ categorization.
 ## Why
 
 Don't give up your all your financial data just to see a inaccurate
-auto-generated categorization table.
+auto-generated categorization table. No login required.
 
 ## Links:
 
-- Package init: https://ionic.io/blog/cross-platform-sveltekit-capacitor-application-yes-its-possible
+- Boilerplate guide used to start repo: https://ionic.io/blog/cross-platform-sveltekit-capacitor-application-yes-its-possible
 - Svelte Forms Lib (Like Formik) https://svelte-forms-lib-sapper-docs.vercel.app/basic
 - Firebase offline syncing: https://firebase.google.com/docs/firestore/manage-data/enable-offline
 
 ## Testing
 
+- Required: `npm i -g firebase-cli`
+
+  - Then: `node run firebase` to start emu.
+
 - Playwright high level e2e tests
   - Tests reuse some application code to modify database for scenarios
 - Tests spin up a local firebase emulator to use
   - Setting a key of "useFBEmulator" in your localstorage will enable emulator
-    usage over a remove firestore instance.
+    usage over a remote firestore instance.
 - Clicking the money emoji 3 times will display debug information in your
   console log, or fire an alert dialog if on mobile
 
@@ -32,11 +36,27 @@ auto-generated categorization table.
 - SPA, no ssr-rendering, all pre-rendered to work with Capacitor
 - Details in +layout.ts
 
-### Revisited 3/8
-
-- Still want to track spending within a paycheck (date range + budget) + categorize + track account + export csv for date range
-
 ### Next Up
 
-- Blog post about time mock
-- Need shadcn before adding more features
+- In Progress: Need shadcn before adding more features
+- Replace firebase w tinybase (because firebase can't be offline only)
+  - Use tinybase to store in sqlite
+  - Encrypt entries at the store level with device id
+    - [uuid](https://forum.ionicframework.com/t/inconsistent-getid-uuid-with-capacitor-device-on-ios/233122/2)
+  - Sync enrolled users w PowerSync to postgres (anything going to postgres is
+    encrypted)
+    - supabase free tier for cloud postgres
+      - projects are paused after 1 week of inactivity? caffeine cron?
+    - powersync free cloud tier, potentially self hosted in future.
+    - using both in combo - [link](https://docs.powersync.com/integration-guides/supabase-+-powersync)
+    - linking tinybase to powersync - [link](https://tinybase.org/api/persister-powersync/)
+    - Oh look that's validating [blog](https://bndkt.com/blog/2024/the-easiest-way-to-build-reactive-local-first-apps-with-tinybase-and-powersync)
+- Track spending within a paycheck (date range + target, "X left")
+- Pie graph of categories
+  - Choosing sub topic shows most expensive sub categories / or purchases
+- Category initialization
+- Export data as CSV
+
+## Future Ideas:
+
+- Woah [siri support?](https://github.com/lovetodream/capacitor-plugin-siri-shortcuts). Would have to parse the text in JS?
