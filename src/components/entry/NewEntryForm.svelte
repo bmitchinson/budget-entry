@@ -9,8 +9,14 @@
   import { Database } from "../../lib/Database";
   import type { Purchase } from "../../lib/DatabaseTypes";
   import { Timestamp } from "firebase/firestore";
+  import NewCategorySelect from "./NewCategorySelect.svelte";
 
   export let superValidatedForm: SuperValidated<FormSchema>;
+
+  // todo: add auto open amount back to UI
+  // App.addListener("appStateChange", ({ isActive }) => {
+  //   isActive && document.getElementById("amount")?.focus();
+  // });
 
   // https://superforms.rocks/concepts/events
   const form = superForm(superValidatedForm, {
@@ -21,7 +27,7 @@
         const entryTime = Timestamp.fromDate(new Date());
         const purchase: Purchase = {
           amount: form.data.amount,
-          category: "hardcoded",
+          category: form.data.category,
           purchaseDatetime: Timestamp.fromDate(new Date()),
           description: form.data.description,
           entryDatetime: entryTime,
@@ -48,6 +54,7 @@
     if (purchase) {
       $formData.amount = purchase.amount;
       $formData.description = purchase.description;
+      $formData.category = purchase.category;
     } else {
       resetForm();
     }
@@ -70,7 +77,8 @@
   <Form.Field {form} name="amount">
     <Form.Control let:attrs>
       <div class="flex flex-col items-end space-y-2">
-        <div class="flex items-center space-x-2">
+        <Form.FieldErrors />
+        <div class="flex items-center justify-between space-x-2">
           <Form.Label>Amount</Form.Label>
           <div>
             <div style="max-width: 13em;">
@@ -87,14 +95,14 @@
             </div>
           </div>
         </div>
-        <Form.FieldErrors />
       </div>
     </Form.Control>
   </Form.Field>
   <Form.Field {form} name="description">
     <Form.Control let:attrs>
       <div class="flex flex-col items-end space-y-2">
-        <div class="flex items-center space-x-2">
+        <Form.FieldErrors />
+        <div class="flex items-center justify-between space-x-2">
           <Form.Label>Description</Form.Label>
           <div>
             <div style="max-width: 13em;">
@@ -110,9 +118,20 @@
           </div>
         </div>
       </div>
-      <Form.FieldErrors />
     </Form.Control>
   </Form.Field>
+  <Form.Field {form} name="category">
+    <Form.Control>
+      <div class="flex items-center justify-between space-y-2">
+        <Form.Label>Category</Form.Label>
+        <NewCategorySelect bind:value={$formData.category} />
+      </div>
+    </Form.Control>
+  </Form.Field>
+
+  <!-- category -->
+
+  <!-- datetime -->
 
   <!-- https://www.shadcn-svelte.com/docs/components/date-picker#date-picker -->
   <!-- date only -->

@@ -11,6 +11,11 @@ categorization.
 Don't give up your all your financial data just to see a inaccurate
 auto-generated categorization table. No login required.
 
+## This idea made me stumble into the "local first" community
+
+- [maggie appleton loficonf talk](https://maggieappleton.com/home-cooked-software)
+- revisited annually: [robin sloan](https://www.robinsloan.com/notes/home-cooked-app/)
+
 ## Links:
 
 - Boilerplate guide used to start repo: https://ionic.io/blog/cross-platform-sveltekit-capacitor-application-yes-its-possible
@@ -39,6 +44,7 @@ auto-generated categorization table. No login required.
 ### Next Up
 
 - In Progress: Need shadcn before adding more features
+- Try bun
 - Replace firebase w tinybase (because firebase can't be offline only)
   - Use tinybase to store in sqlite
   - Encrypt entries at the store level with device id

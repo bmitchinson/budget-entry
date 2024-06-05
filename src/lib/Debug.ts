@@ -32,7 +32,7 @@ const showBuiltDebugMsg = (info: any) => {
   if (Capacitor.isNativePlatform()) {
     alert(JSON.stringify(info));
   } else {
-    logDebug("DEBUG INFO:", info);
+    logDebug(info);
   }
 };
 
