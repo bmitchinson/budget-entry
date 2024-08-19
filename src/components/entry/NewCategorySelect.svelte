@@ -5,7 +5,7 @@
   import * as Command from "$components/ui/command/index";
   import * as Popover from "$components/ui/popover/index";
   import { Button } from "$components/ui/button/index";
-  import { cn } from "$lib/utils/shadecnUtils";
+  import { cn } from "$lib/utils/shadcnUtils";
   import { tick } from "svelte";
 
   const categories = [

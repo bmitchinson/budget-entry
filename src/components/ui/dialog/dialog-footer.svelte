@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { HTMLAttributes } from "svelte/elements";
-  import { cn } from "$lib/utils/shadecnUtils";
+  import { cn } from "$lib/utils/shadcnUtils";
 
   type $$Props = HTMLAttributes<HTMLDivElement>;
 

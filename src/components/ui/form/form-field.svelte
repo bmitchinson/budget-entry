@@ -11,7 +11,7 @@
 >
   import type { HTMLAttributes } from "svelte/elements";
   import * as FormPrimitive from "formsnap";
-  import { cn } from "$lib/utils/shadecnUtils";
+  import { cn } from "$lib/utils/shadcnUtils";
 
   type $$Props = FormPrimitive.FieldProps<T, U> & HTMLAttributes<HTMLElement>;
 

@@ -55,6 +55,7 @@
       $formData.amount = purchase.amount;
       $formData.description = purchase.description;
       $formData.category = purchase.category;
+      $formData.purchaseDatetime = purchase.purchaseDatetime;
     } else {
       resetForm();
     }
@@ -129,27 +130,22 @@
     </Form.Control>
   </Form.Field>
 
-  <!-- category -->
-
-  <!-- datetime -->
-
   <!-- https://www.shadcn-svelte.com/docs/components/date-picker#date-picker -->
   <!-- date only -->
-  <!-- <Form.Field {form} name="purchaseDatetime">
+  <Form.Field {form} name="purchaseDatetime">
     <Form.Control let:attrs>
-      <Form.Label>Date/Time</Form.Label>
-      <Input {...attrs} bind:value={$formData.purchaseDatetime} />
+      <div class="flex items-center justify-between space-y-2">
+        <Form.Label>Date/Time</Form.Label>
+        <Input
+          {...attrs}
+          type="datetime-local"
+          bind:value={$formData.purchaseDatetime}
+          data-testid="datetime-input"
+        />
+      </div>
     </Form.Control>
     <Form.FieldErrors />
   </Form.Field>
-
-  <Form.Field {form} name="category">
-    <Form.Control let:attrs>
-      <Form.Label>Category</Form.Label>
-      <Input {...attrs} bind:value={$formData.category} />
-    </Form.Control>
-    <Form.FieldErrors />
-  </Form.Field> -->
 
   <div id="form-buttons" class="flex justify-center space-x-4">
     {#if $purchaseBeingEdited}
