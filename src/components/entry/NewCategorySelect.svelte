@@ -1,3 +1,4 @@
+<!-- https://www.shadcn-svelte.com/docs/components/combobox -->
 <script lang="ts">
   import { Check } from "lucide-svelte";
   import { ChevronsUpDown } from "lucide-svelte";
@@ -47,6 +48,7 @@
       role="combobox"
       aria-expanded={open}
       class="w-[200px] justify-between"
+      id="category-input-btn"
     >
       {selectedValue}
       <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -54,7 +56,7 @@
   </Popover.Trigger>
   <Popover.Content class="w-[200px] p-0">
     <Command.Root>
-      <Command.Input placeholder="Select Category..." />
+      <Command.Input id="category-input" placeholder="Select Category..." />
       <Command.Empty>No Category found.</Command.Empty>
       <Command.Group>
         {#each categories as category}
@@ -64,6 +66,7 @@
               value = currentValue;
               closeAndFocusTrigger(ids.trigger);
             }}
+            class="category-item"
           >
             <Check
               class={cn(

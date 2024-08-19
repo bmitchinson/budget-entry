@@ -17,9 +17,9 @@ export const dateToDatetimeFieldValue = (date: Date) =>
 export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Amount").fill("10.77");
   await page.getByLabel("Description").fill("cool trip");
-  await page.locator("#category-input").press("Delete");
+  await page.locator("#category-input-btn").click();
   await page.locator("#category-input").fill("Gas");
-  await page.locator(".sv-item").first().click();
+  await page.locator(".category-item").first().click();
   await page.getByLabel("Date/Time").fill(mockedClockDatetimeString);
 };
 

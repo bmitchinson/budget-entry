@@ -78,7 +78,7 @@
     <Form.Control let:attrs>
       <div class="flex flex-col items-end space-y-2">
         <Form.FieldErrors />
-        <div class="flex items-center justify-between space-x-2">
+        <div class="flex items-center justify-between space-x-2 max-width">
           <Form.Label>Amount</Form.Label>
           <div>
             <div style="max-width: 13em;">
