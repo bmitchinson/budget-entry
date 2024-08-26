@@ -1,69 +1,66 @@
 <script lang="ts">
-  import { createForm } from "svelte-forms-lib";
-  import { App } from "@capacitor/app";
-  import CategorySelect from "./CategorySelect.svelte";
-  import { Database } from "$lib/Database";
-  import { Timestamp } from "firebase/firestore";
+  import { superForm, type SuperValidated } from "sveltekit-superforms";
+  import { formSchema, initialFormValues, type FormSchema } from "./formSchema";
+  import { zod } from "sveltekit-superforms/adapters";
+  import * as Form from "$components/ui/form";
+  import Input from "$components/ui/input/input.svelte";
+  import type { FormInputEvent } from "$components/ui/input";
   import {
     purchaseAskingToConfirmDelete,
     purchaseBeingEdited,
-  } from "$lib/Stores";
-  import type { Purchase } from "$lib/DatabaseTypes";
-  import {
-    datetimeToTimestamp,
-    initialDatetimeString,
-    timestampToDatetimeString,
-  } from "$lib/utils/DateUtils";
-  import Button from "../ui/button/button.svelte";
+  } from "../../lib/Stores";
+  import { Database } from "../../lib/Database";
+  import type { Purchase } from "../../lib/DatabaseTypes";
+  import { Timestamp } from "firebase/firestore";
+  import NewCategorySelect from "./CategorySelect.svelte";
+  import { timestampToDatetimeString } from "../../lib/utils/DateUtils";
 
-  App.addListener("appStateChange", ({ isActive }) => {
-    isActive && document.getElementById("amount")?.focus();
-  });
+  export let superValidatedForm: SuperValidated<FormSchema>;
 
-  const initialFormValues = () => ({
-    amount: "",
-    category: "",
-    purchaseDatetime: initialDatetimeString(),
-    description: "",
-  });
+  // App.addListener("appStateChange", ({ isActive }) => {
+  //   isActive && document.getElementById("amount")?.focus();
+  // });
 
-  const resetForm = () => form.set(initialFormValues());
-
-  const { form, handleChange, handleSubmit } = createForm({
-    initialValues: initialFormValues(),
-    onSubmit: (formData) => {
-      const entryTime = Timestamp.fromDate(new Date());
-      const purchase: Purchase = {
-        ...formData,
-        purchaseDatetime: datetimeToTimestamp(formData.purchaseDatetime),
-        amount: parseFloat(formData.amount) || 0,
-        entryDatetime: entryTime,
-      };
-      if ($purchaseBeingEdited) {
-        Database.get()
-          .updatePurchase($purchaseBeingEdited.ref, purchase)
-          .then(() => {
-            purchaseBeingEdited.set(undefined);
-            resetForm();
-          });
-      } else {
-        Database.get()
-          .addPurchase(purchase)
-          .then(() => {
-            resetForm();
-          });
+  // https://superforms.rocks/concepts/events
+  const form = superForm(superValidatedForm, {
+    SPA: true,
+    validators: zod(formSchema),
+    onUpdate({ form }) {
+      if (form.valid) {
+        const entryTime = Timestamp.fromDate(new Date());
+        const purchase: Purchase = {
+          amount: form.data.amount,
+          category: form.data.category,
+          purchaseDatetime: Timestamp.fromDate(new Date()),
+          description: form.data.description,
+          entryDatetime: entryTime,
+        };
+        if ($purchaseBeingEdited) {
+          Database.get()
+            .updatePurchase($purchaseBeingEdited.ref, purchase)
+            .then(() => {
+              purchaseBeingEdited.set(undefined);
+              resetForm();
+            });
+        } else {
+          Database.get().addPurchase(purchase).then(resetForm);
+        }
       }
     },
   });
 
+  const { form: formData, enhance } = form;
+
+  const resetForm = () => ($formData = initialFormValues());
+
   purchaseBeingEdited.subscribe((purchase) => {
     if (purchase) {
-      form.set({
-        amount: purchase.amount.toString(),
-        category: purchase.category,
-        purchaseDatetime: timestampToDatetimeString(purchase.purchaseDatetime),
-        description: purchase.description,
-      });
+      $formData.amount = purchase.amount;
+      $formData.description = purchase.description;
+      $formData.category = purchase.category;
+      $formData.purchaseDatetime = timestampToDatetimeString(
+        purchase.purchaseDatetime
+      );
     } else {
       resetForm();
     }
@@ -74,82 +71,113 @@
       resetForm();
     }
   });
+
+  const inputEventToFloat = (e: FormInputEvent<InputEvent>) => {
+    const { value } = e?.target as HTMLInputElement;
+    $formData.amount = parseFloat(value) || 0;
+  };
 </script>
 
-<div class="entry-form">
-  <form on:submit={handleSubmit}>
-    <div class="row-item space-between">
-      <label for="amount">Amount</label>
-      <!-- svelte-ignore a11y-autofocus -->
-      <input
-        id="amount"
-        name="amount"
-        type="number"
-        step=".01"
-        inputmode="decimal"
-        autofocus
-        data-testid="amount-input"
-        on:change={handleChange}
-        bind:value={$form.amount}
-      />
-    </div>
+<!-- todo: new-shade-test: negative amount turns amount red -->
 
-    <div class="row-item space-between">
-      <label for="description">Description</label>
-      <input
-        id="description"
-        name="description"
-        data-testid="description-input"
-        on:change={handleChange}
-        bind:value={$form.description}
-      />
-    </div>
+<!-- todo: new-shade-test: negative amount won't create new purchase -->
 
-    <div class="row-item space-between">
-      <CategorySelect bind:selectedCategory={$form.category} />
-    </div>
+<!-- todo: new-shade-test: negative amount won't allow edit -->
 
-    <div class="row-item space-between">
-      <label for="datetime">Date/Time</label>
-      <input
-        id="datetime"
-        name="datetime"
-        type="datetime-local"
-        data-testid="datetime-input"
-        on:change={handleChange}
-        bind:value={$form.purchaseDatetime}
-      />
-    </div>
+<!-- https://github.com/huntabyte/shadcn-svelte/blob/main/apps/www/src/routes/(app)/examples/forms/account/account-form.svelte#L109 -->
+<form method="POST" use:enhance>
+  <Form.Field {form} name="amount">
+    <Form.Control let:attrs>
+      <div class="flex flex-col items-end space-y-2">
+        <Form.FieldErrors />
+        <div class="flex items-center justify-between space-x-2 max-width">
+          <Form.Label>Amount</Form.Label>
+          <div>
+            <div style="max-width: 13em;">
+              <Input
+                on:input={inputEventToFloat}
+                class=""
+                bind:value={$formData.amount}
+                type="number"
+                step=".01"
+                inputmode="decimal"
+                data-testid="amount-input"
+                {...attrs}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Form.Control>
+  </Form.Field>
+  <Form.Field {form} name="description">
+    <Form.Control let:attrs>
+      <div class="flex flex-col items-end space-y-2">
+        <Form.FieldErrors />
+        <div class="flex items-center justify-between space-x-2">
+          <Form.Label>Description</Form.Label>
+          <div>
+            <div style="max-width: 13em;">
+              <Input
+                class=""
+                bind:value={$formData.description}
+                type="text"
+                inputmode="text"
+                data-testid="description-input"
+                {...attrs}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Form.Control>
+  </Form.Field>
+  <Form.Field {form} name="category">
+    <Form.Control>
+      <div class="flex items-center justify-between space-y-2">
+        <Form.Label>Category</Form.Label>
+        <NewCategorySelect bind:value={$formData.category} />
+      </div>
+    </Form.Control>
+  </Form.Field>
 
-    <div class="row-item center">
-      {#if !$purchaseBeingEdited}
-        <Button type="submit">Submit</Button>
-        <Button
-          on:click={(event) => {
-            event.stopPropagation();
-            resetForm();
-          }}>Reset</Button
-        >
-      {:else}
-        <Button type="submit">Save Edit</Button>
-        <Button
-          on:click={(event) => {
-            event.stopPropagation();
-            resetForm();
-            purchaseBeingEdited.set(undefined);
-          }}>Cancel Edit</Button
-        >
-      {/if}
-    </div>
-  </form>
-</div>
+  <!-- https://www.shadcn-svelte.com/docs/components/date-picker#date-picker -->
+  <!-- date only -->
+  <Form.Field {form} name="purchaseDatetime">
+    <Form.Control let:attrs>
+      <div class="flex items-center justify-between space-y-2">
+        <Form.Label>Date/Time</Form.Label>
+        <Input
+          {...attrs}
+          type="datetime-local"
+          bind:value={$formData.purchaseDatetime}
+          data-testid="datetime-input"
+        />
+      </div>
+    </Form.Control>
+    <Form.FieldErrors />
+  </Form.Field>
+
+  <div id="form-buttons" class="flex justify-center space-x-4">
+    {#if $purchaseBeingEdited}
+      <Form.Button type="submit">Save Edit</Form.Button>
+      <Form.Button
+        type="button"
+        on:click={(event) => {
+          event.stopPropagation();
+          resetForm();
+          purchaseBeingEdited.set(undefined);
+        }}>Cancel Edit</Form.Button
+      >
+    {:else}
+      <Form.Button type="submit">Submit</Form.Button>
+      <Form.Button type="button" on:click={resetForm}>Reset</Form.Button>
+    {/if}
+  </div>
+</form>
 
 <style>
-  .entry-form {
-    font-size: 1.3rem;
+  #form-buttons {
+    margin-top: 1em;
   }
-  /* button {
-    padding: 1em 2em;
-    -webkit-appearance: none;
-  } */
 </style>

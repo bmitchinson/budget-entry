@@ -24,7 +24,7 @@
     "write-tests": "playwright codegen localhost:5173"
   },
   "devDependencies": {
-    "@playwright/test": "^1.37.0",
+    "@playwright/test": "^1.46.1",
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/adapter-static": "^2.0.2",
     "@sveltejs/kit": "^1.20.4",

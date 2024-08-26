@@ -1,11 +1,9 @@
 <script lang="ts">
   import "../global.pcss";
 
-  import EntryForm from "$components/entry/EntryForm.svelte";
-
   import { debugClick } from "$lib/Debug";
   import PastPurchasesList from "$components/purchases/PastPurchasesList.svelte";
-  import NewEntryForm from "$components/entry/NewEntryForm.svelte";
+  import EntryForm from "$components/entry/EntryForm.svelte";
 
   export let data;
 </script>
@@ -15,7 +13,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
     <h1 class="emoji" on:click={debugClick} data-testid="money-icon">💸</h1>
-    <NewEntryForm superValidatedForm={data.form} />
+    <EntryForm superValidatedForm={data.form} />
     <div class="space" />
     <PastPurchasesList />
   </div>

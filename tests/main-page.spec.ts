@@ -222,7 +222,7 @@ test.describe("Deleting", () => {
 test("clicking header 3 times logs a debug message", async ({ page }) => {
   let debugPrinted = false;
   page.on("console", (msg) => {
-    if (msg.text().includes("DEBUG INFO")) {
+    if (msg.text().includes("⚙️ // ")) {
       debugPrinted = true;
     }
   });

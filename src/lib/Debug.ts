@@ -18,11 +18,10 @@ let debugClicks = 0;
 
 export const debugClick = () => {
   debugClicks++;
-  if (debugClicks == 3) {
+  if (debugClicks >= 3) {
     debugClicks = 0;
     showBuiltDebugMsg({
       purchaseBeingEditedId: get(purchaseBeingEdited)?.ref.id,
-      purchaseBeingEditedDescription: get(purchaseBeingEdited)?.description,
       usingFirebaseEmulator: Database.get().usingFirebaseEmulator,
     });
   }
@@ -32,7 +31,7 @@ const showBuiltDebugMsg = (info: any) => {
   if (Capacitor.isNativePlatform()) {
     alert(JSON.stringify(info));
   } else {
-    logDebug(info);
+    logDebug(JSON.stringify(info));
   }
 };
 
