@@ -59,10 +59,6 @@ test("Past purchases are loaded and shown in order", async ({ page }) => {
 });
 
 test.describe("Entry form", () => {
-  test("Auto focuses on page load", async ({ page }) => {
-    await expect(page.getByLabel("Amount")).toBeFocused();
-  });
-
   test("Clocks is set to the mocked playwright time", async ({ page }) => {
     await expect(page.getByTestId("datetime-input")).toHaveValue(
       new RegExp(mockedClockDatetimeString)

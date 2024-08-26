@@ -18,7 +18,11 @@
   export let superValidatedForm: SuperValidated<FormSchema>;
 
   // App.addListener("appStateChange", ({ isActive }) => {
-  //   isActive && document.getElementById("amount")?.focus();
+  //   isActive && document.getElementsByName("amount")[0]?.focus();
+  // });
+
+  // App.addListener("appUrlOpen", () => {
+  //   document.getElementsByName("amount")[0]?.focus();
   // });
 
   // https://superforms.rocks/concepts/events
@@ -102,6 +106,7 @@
                 step=".01"
                 inputmode="decimal"
                 data-testid="amount-input"
+                autofocus
                 {...attrs}
               />
             </div>
