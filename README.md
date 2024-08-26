@@ -15,6 +15,7 @@ auto-generated categorization table. No login required.
 
 - [maggie appleton loficonf talk](https://maggieappleton.com/home-cooked-software)
 - revisited annually: [robin sloan](https://www.robinsloan.com/notes/home-cooked-app/)
+- https://biscuits.club/about built with https://github.com/a-type/verdant
 
 ## Links:
 
@@ -43,8 +44,6 @@ auto-generated categorization table. No login required.
 
 ### Next Up
 
-- In Progress: Need shadcn before adding more features
-- Try bun
 - Replace firebase w tinybase (because firebase can't be offline only)
   - Use tinybase to store in sqlite
   - Encrypt entries at the store level with device id
@@ -58,11 +57,13 @@ auto-generated categorization table. No login required.
     - linking tinybase to powersync - [link](https://tinybase.org/api/persister-powersync/)
     - Oh look that's validating [blog](https://bndkt.com/blog/2024/the-easiest-way-to-build-reactive-local-first-apps-with-tinybase-and-powersync)
 - Track spending within a paycheck (date range + target, "X left")
+  - Log these spending goals
 - Pie graph of categories
   - Choosing sub topic shows most expensive sub categories / or purchases
 - Category initialization
 - Export data as CSV
+- Spending timeline checklist
 
 ## Future Ideas:
 
-- Woah [siri support?](https://github.com/lovetodream/capacitor-plugin-siri-shortcuts). Would have to parse the text in JS?
+- Woah [siri support?](https://github.com/lovetodream/capacitor-plugin-siri-shortcuts)

@@ -261,17 +261,3 @@ test.describe("Reset", () => {
     );
   });
 });
-
-// enable some of these tests to run in offline mode?
-// - add purchase, block FB, add 2nd purchase, refresh page (FB Still blocked), are both purchases there?
-//    - same but with delete as the operation instead of add
-// - ^ that was the core of why I wanted to use firebase so .... hope those work?
-// https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
-
-// feature: firebase rules to require login?
-// feature: ditch firebase and use verdant?
-// https://github.com/a-type/verdant
-
-// feature: sort toggle (sort purchases by entry date or purchase date)
-
-// idea: dark theme
