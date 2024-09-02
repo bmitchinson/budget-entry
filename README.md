@@ -48,8 +48,9 @@ auto-generated categorization table. No login required.
   - Use tinybase to store in sqlite
   - Add sqlite backup / restore
 - TestFlight
+  - Research OTA updates to the webapp instead of app updates
+- Linting / formatting / bun
 - CI/CD
-- Linting / formatting
 - Track spending within a paycheck (date range + target, "X left")
   - Log these spending goals
 - Pie graph of categories
