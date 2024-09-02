@@ -1,10 +1,11 @@
 <script lang="ts">
-  import "../global.scss";
+  import "../global.pcss";
 
-  import Form from "../components/entry/EntryForm.svelte";
+  import { debugClick } from "$lib/Debug";
+  import PastPurchasesList from "$components/purchases/PastPurchasesList.svelte";
+  import EntryForm from "$components/entry/EntryForm.svelte";
 
-  import { debugClick } from "../lib/Debug";
-  import PastPurchasesList from "../components/purchases/PastPurchasesList.svelte";
+  export let data;
 </script>
 
 <div class="container-h">
@@ -12,13 +13,13 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
     <h1 class="emoji" on:click={debugClick} data-testid="money-icon">💸</h1>
-    <Form />
+    <EntryForm superValidatedForm={data.form} />
     <div class="space" />
     <PastPurchasesList />
   </div>
 </div>
 
-<style lang="scss">
+<style>
   .container-h {
     width: 100vw;
     padding-top: 5em;
@@ -37,6 +38,7 @@
   .emoji {
     cursor: default;
     user-select: none;
-    scale: 2;
+    scale: 3;
+    margin-bottom: 2em;
   }
 </style>

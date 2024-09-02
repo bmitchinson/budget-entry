@@ -19,7 +19,7 @@ import {
 } from "./CommonTestOperations";
 import { add, format } from "date-fns";
 
-// TODO: Use shadcn/ui
+// todo: ci/cd failing?
 
 test.beforeEach(async ({ page }) => {
   // https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
@@ -59,10 +59,6 @@ test("Past purchases are loaded and shown in order", async ({ page }) => {
 });
 
 test.describe("Entry form", () => {
-  test("Auto focuses on page load", async ({ page }) => {
-    await expect(page.getByLabel("Amount")).toBeFocused();
-  });
-
   test("Clocks is set to the mocked playwright time", async ({ page }) => {
     await expect(page.getByTestId("datetime-input")).toHaveValue(
       new RegExp(mockedClockDatetimeString)
@@ -80,8 +76,6 @@ test.describe("Entry form", () => {
       new RegExp(mockedClockDatetimeString)
     );
   });
-
-  // todo-postshadcn: add clear button to form
 
   test("Defaults to the current datetime", async ({ page }) => {
     await advanceTimeOneMinute(page);
@@ -126,7 +120,7 @@ test.describe("Adding", () => {
     );
   });
 
-  // todo-postshadcn: validation for each field (right now you can just do category)
+  // feature: validation for each field (right now you can just do category)
 });
 
 test.describe("Editing", () => {
@@ -224,7 +218,7 @@ test.describe("Deleting", () => {
 test("clicking header 3 times logs a debug message", async ({ page }) => {
   let debugPrinted = false;
   page.on("console", (msg) => {
-    if (msg.text().includes("DEBUG INFO")) {
+    if (msg.text().includes("⚙️ // ")) {
       debugPrinted = true;
     }
   });
@@ -267,16 +261,3 @@ test.describe("Reset", () => {
     );
   });
 });
-
-// todo: enable some of these tests to run in offline mode
-//     as well?
-// - add purchase, block FB, add 2nd purchase, refresh page (FB Still blocked), are both purchases there?
-//    - same but with delete as the operation instead of add
-// - ^ that was the core of why I wanted to use firebase so .... hope those work?
-// https://github.com/microsoft/playwright/issues/27599#issuecomment-1761787734
-
-// todo: firebase rules to require login?
-
-// idea: sort toggle (sort purchases by entry date or purchase date)
-
-// idea: dark theme

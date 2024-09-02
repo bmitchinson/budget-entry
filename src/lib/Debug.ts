@@ -1,8 +1,8 @@
 import { Capacitor } from "@capacitor/core";
-import { purchaseBeingEdited } from "../lib/Stores";
+import { purchaseBeingEdited } from "$lib/Stores";
 import { get } from "svelte/store";
 import { Database } from "./Database";
-import { logInfo } from "./Logging";
+import { logDebug, logInfo } from "./Logging";
 
 (window as any).toggleTestDB = () => {
   if (localStorage.getItem("useFBEmulator") == "true") {
@@ -18,11 +18,10 @@ let debugClicks = 0;
 
 export const debugClick = () => {
   debugClicks++;
-  if (debugClicks == 3) {
+  if (debugClicks >= 3) {
     debugClicks = 0;
     showBuiltDebugMsg({
       purchaseBeingEditedId: get(purchaseBeingEdited)?.ref.id,
-      purchaseBeingEditedDescription: get(purchaseBeingEdited)?.description,
       usingFirebaseEmulator: Database.get().usingFirebaseEmulator,
     });
   }
@@ -32,7 +31,7 @@ const showBuiltDebugMsg = (info: any) => {
   if (Capacitor.isNativePlatform()) {
     alert(JSON.stringify(info));
   } else {
-    console.log("⚙️ DEBUG INFO:", info);
+    logDebug(JSON.stringify(info));
   }
 };
 

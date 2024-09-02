@@ -1,13 +1,10 @@
 <script lang="ts">
   import { format } from "date-fns";
-  import { Database } from "../../lib/Database";
+  import { Database } from "$lib/Database";
   import { clickoutside } from "@svelte-put/clickoutside";
-  import type {
-    Purchase,
-    WithFirebaseDocumentRef,
-  } from "../../lib/DatabaseTypes";
-  import { purchaseBeingEdited } from "../../lib/Stores";
-  import { purchaseAskingToConfirmDelete } from "../../lib/Stores";
+  import type { Purchase, WithFirebaseDocumentRef } from "$lib/DatabaseTypes";
+  import { purchaseBeingEdited } from "$lib/Stores";
+  import { purchaseAskingToConfirmDelete } from "$lib/Stores";
 
   export let index: number;
   export let purchase: WithFirebaseDocumentRef<Purchase>;
@@ -26,6 +23,8 @@
     deleteConfirmationActive && purchaseAskingToConfirmDelete.set(undefined);
   };
 </script>
+
+<!-- feature: date range to query, impacts "initializePurchasesSubscription" -->
 
 <tr data-testid="purchase-list-item-{index}">
   <th class="text-center" class:under-edit={isUnderEdit}
@@ -68,7 +67,7 @@
   >
 </tr>
 
-<style lang="scss">
+<style>
   .text-left {
     text-align: left;
   }
@@ -93,6 +92,6 @@
   th {
     border: 1px solid #dddddd;
     padding: 0.5em;
-    // width: 5em;
+    /* width: 5em; */
   }
 </style>

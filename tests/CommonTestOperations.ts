@@ -17,9 +17,9 @@ export const dateToDatetimeFieldValue = (date: Date) =>
 export const fillPurchaseFormWithValidData = async (page: Page) => {
   await page.getByLabel("Amount").fill("10.77");
   await page.getByLabel("Description").fill("cool trip");
-  await page.locator("#category-input").press("Delete");
+  await page.locator("#category-input-btn").click();
   await page.locator("#category-input").fill("Gas");
-  await page.locator(".sv-item").first().click();
+  await page.locator(".category-item").first().click();
   await page.getByLabel("Date/Time").fill(mockedClockDatetimeString);
 };
 
@@ -40,9 +40,9 @@ export const clickDeletePurchaseAtIndex = async (page: Page, index: number) => {
 };
 
 export const expectFormToBeEmpty = async (page: Page) => {
-  await expect(await amountOnForm(page)).toBe("");
+  await expect(await amountOnForm(page)).toBe("0");
   await expect(await descriptionOnForm(page)).toBe("");
-  await expect(await categoryOnForm(page)).toBe("");
+  await expect(await categoryOnForm(page)).toBe("Select Category");
   await expect(page.getByTestId("datetime-input")).toHaveValue(
     new RegExp(mockedClockDatetimeString)
   );
@@ -59,12 +59,7 @@ export const descriptionOnForm = async (page: Page) =>
   await page.getByTestId("description-input").inputValue();
 
 export const categoryOnForm = async (page: Page) => {
-  const selectedCategory = await page.locator(".sv-item-content").count();
-  if (selectedCategory) {
-    return await page.locator(".sv-item-content").textContent();
-  } else {
-    return "";
-  }
+  return page.locator("#category-input-btn").innerText();
 };
 
 export const advanceTimeOneMinute = async (page: Page) =>
